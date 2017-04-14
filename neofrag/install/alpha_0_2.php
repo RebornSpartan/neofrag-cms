@@ -190,5 +190,11 @@ class Alpha_0_2 extends Install
 		//File
 		$this->db	->execute('ALTER TABLE `nf_files` CHANGE `file_id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
 					->execute('RENAME TABLE `nf_files` TO `nf_file`');
+
+		//User
+		$this->db	->execute('ALTER TABLE `nf_users` CHANGE `user_id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
+					->execute('RENAME TABLE `nf_users` TO `nf_user`')
+					->execute('ALTER TABLE `nf_user` CHANGE `user_data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL')
+					->execute('RENAME TABLE `nf_users_profiles` TO `nf_user_profile`');
 	}
 }
