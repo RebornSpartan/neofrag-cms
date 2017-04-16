@@ -91,7 +91,7 @@ class Live_Editor extends Model
 
 	public function get_widgets(&$widgets, &$types)
 	{
-		foreach ($this->addons->get_widgets() as $widget)
+		foreach (NeoFrag()->model2('addon')->get('widget') as $widget)
 		{
 			if ($widget->name == 'error')
 			{
@@ -100,9 +100,9 @@ class Live_Editor extends Model
 
 			$widgets[$widget->name] = $widget->get_title();
 
-			if (!empty($widget->types))
+			if (!empty($widget->info()->types))
 			{
-				$types[$widget->name] = $widget->lang($widget->types, NULL);
+				$types[$widget->name] = $widget->lang($widget->info()->types, NULL);
 				array_natsort($types[$widget->name]);
 			}
 		}

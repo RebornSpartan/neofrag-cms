@@ -14,14 +14,14 @@ class Admin_Checker extends Module_Checker
 	{
 		$modules = $objects = [];
 
-		foreach ($this->addons->get_modules() as $module)
+		foreach (NeoFrag()->model2('addon')->get('module') as $module)
 		{
 			foreach ($module->get_permissions() as $type => $access)
 			{
 				if (!empty($access['get_all']) && $get_all = call_user_func($access['get_all']))
 				{
-					$modules[$module->name] = [$module, $module->icon, $type, $access];
-					$objects[$module->name] = $get_all;
+					$modules[$module->info()->name] = [$module, $module->info()->icon, $type, $access];
+					$objects[$module->info()->name] = $get_all;
 				}
 			}
 		}
