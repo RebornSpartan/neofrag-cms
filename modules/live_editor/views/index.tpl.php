@@ -13,10 +13,10 @@
 		<div class="pull-right">
 			<p class="hidden-xs hidden-sm"><?php echo $this->lang('Gestion du contenu') ?></p>
 			<div class="btn-group">
-				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::ZONES ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::ZONES ?>"><?php echo icon('fa-square-o').' '.$this->lang('zones') ?></button>
-				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::ROWS ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::ROWS ?>"><?php echo icon('fa-columns fa-rotate-270').' '.$this->lang('rows') ?></button>
-				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::COLS ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::COLS ?>"><?php echo icon('fa-columns').' '.$this->lang('cols') ?></button>
-				<button type="button" class="live-editor-mode active" data-mode="<?php echo \NF\NeoFrag\Core\Output::WIDGETS ?>"><?php echo icon('fa-th-large').' '.$this->lang('widgets') ?></button>
+				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::ZONES ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::ZONES ?>"><?php echo icon('fa-square-o').' '.$this->lang('Zones') ?></button>
+				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::ROWS ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::ROWS ?>"><?php echo icon('fa-columns fa-rotate-270').' '.$this->lang('Rows') ?></button>
+				<button type="button" class="live-editor-mode<?php echo $live_editor & \NF\NeoFrag\Core\Output::COLS ? ' active' : '' ?>" data-mode="<?php echo \NF\NeoFrag\Core\Output::COLS ?>"><?php echo icon('fa-columns').' '.$this->lang('Cols') ?></button>
+				<button type="button" class="live-editor-mode active" data-mode="<?php echo \NF\NeoFrag\Core\Output::WIDGETS ?>"><?php echo icon('fa-th-large').' '.$this->lang('Widgets') ?></button>
 			</div>
 			<p class="hidden-xs hidden-sm"><?php echo $this->lang('Simuler l\'affichage') ?></p>
 			<div class="btn-group">
