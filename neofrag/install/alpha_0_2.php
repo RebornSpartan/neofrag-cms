@@ -186,5 +186,9 @@ class Alpha_0_2 extends Install
 					->update('nf_settings', [
 						'site' => ''
 					]);
+
+		//File
+		$this->db	->execute('ALTER TABLE `nf_files` CHANGE `file_id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
+					->execute('RENAME TABLE `nf_files` TO `nf_file`');
 	}
 }
