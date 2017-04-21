@@ -135,5 +135,7 @@ class Alpha_0_2 extends Install
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `user_id` (`user_id`,`model`,`model_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
+
+		$this->db->where('name', 'nf_debug')->delete('nf_settings');
 	}
 }
