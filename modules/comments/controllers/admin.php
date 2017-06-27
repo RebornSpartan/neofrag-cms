@@ -66,7 +66,7 @@ class Admin extends Controller_Module
 			[
 				'title'   => '<i class="fa fa-comments-o" data-toggle="tooltip" title="'.$this->lang('Nombre de commentaires').'"></i>',
 				'content' => function($data){
-					return NeoFrag()->comments->admin_comments($data['module'], $data['module_id'], FALSE);
+					return $this->module->count($data['module'], $data['module_id'], FALSE);
 				},
 				'size'    => TRUE
 			],

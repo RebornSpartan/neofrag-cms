@@ -1,0 +1,54 @@
+.comments {
+	.media {
+		padding: 25px 0;
+
+		+ .media {
+			border-top: 1px solid #ebebeb;
+		}
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+
+		.media-body {
+			padding-left: 15px;
+
+			.action {
+				float: right;
+				display: none;
+
+				.btn {
+
+					+ .btn {
+						margin-left: 10px;
+					}
+				}
+			}
+		}
+
+		&:hover {
+			.media-body {
+				.action {
+					display: block;
+				}
+			}
+		}
+
+		.avatar {
+			height: 50px;
+			width: 50px;
+
+			.inner-ring {
+				background: #fff;
+			}
+
+			&:after {
+				border-color: #fff;
+			}
+		}
+	}
+}
