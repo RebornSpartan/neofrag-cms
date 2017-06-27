@@ -5,7 +5,10 @@
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading"><a href="<?php echo url('news/'.$news['news_id'].'/'.url_title($news['title'])) ?>"><?php echo $news['title'] ?></a></h4>
-		<?php echo icon('fa-clock-o').' '.time_span($news['date']) ?> <a href="<?php echo url('news/'.$news['news_id'].'/'.url_title($news['title'])) ?>#comments"><?php echo icon('fa-comment-o').' '.$this->comments->count_comments('news', $news['news_id']) ?></a>
+		<?php echo icon('fa-clock-o').' '.time_span($news['date']) ?>
+		<?php if (($comments = $this->module('comments')) && $comments->is_enabled()): ?>
+			<li><?php echo $comments->link('news', $news['news_id'], 'news/'.$news['news_id'].'/'.url_title($title)) ?></li>
+		<?php endif ?>
 	</div>
 </div>
 <?php endforeach ?>

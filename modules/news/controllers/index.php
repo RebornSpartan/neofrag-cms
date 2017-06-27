@@ -120,13 +120,17 @@ class Index extends Controller_Module
 									)
 							)
 						)
-						->append($this->comments->display('news', $news_id));
+						->append_if(($comments = $this->module('comments')) && $comments->is_enabled(), function() use (&$comments, $news_id){
+							return $comments('news', $news_id);
+						});
 		}
 		else
 		{
 			return $this->array
 						->append($news)
-						->append($this->comments->display('news', $news_id));
+						->append_if(($comments = $this->module('comments')) && $comments->is_enabled(), function() use (&$comments, $news_id){
+							return $comments('news', $news_id);
+						});
 		}
 	}
 }

@@ -196,5 +196,9 @@ class Alpha_0_2 extends Install
 					->execute('RENAME TABLE `nf_users` TO `nf_user`')
 					->execute('ALTER TABLE `nf_user` CHANGE `user_data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL')
 					->execute('RENAME TABLE `nf_users_profiles` TO `nf_user_profile`');
+
+		//Comment
+		$this->db	->execute('ALTER TABLE `nf_comments` CHANGE `comment_id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
+					->execute('RENAME TABLE `nf_comments` TO `nf_comment`');
 	}
 }
