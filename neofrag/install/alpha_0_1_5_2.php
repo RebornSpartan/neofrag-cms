@@ -4,7 +4,11 @@
  * @author: Michaël BILCOT <michael.bilcot@neofr.ag>
  */
 
-class i_0_1_5_2 extends Install
+namespace NF\NeoFrag\Install;
+
+use NF\NeoFrag\Loadables\Install;
+
+class Alpha_0_1_5_2 extends Install
 {
 	public function up()
 	{
