@@ -229,5 +229,9 @@ class Alpha_0_2 extends Install
 		//Comment
 		$this->db	->execute('ALTER TABLE `nf_comments` CHANGE `comment_id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
 					->execute('RENAME TABLE `nf_comments` TO `nf_comment`');
+
+		//Talks
+		$this->db	->execute('ALTER TABLE nf_talks CONVERT TO CHARACTER SET utf8')
+					->execute('ALTER TABLE nf_talks_messages CONVERT TO CHARACTER SET utf8');
 	}
 }
