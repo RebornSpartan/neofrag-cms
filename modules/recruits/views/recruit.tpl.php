@@ -1,7 +1,7 @@
 <div class="row">
 	<?php if ($data['image_id']): ?>
 	<div class="col-md-4">
-		<a class="thumbnail" href="<?php echo url('recruits/'.$data['recruit_id'].'/'.url_title($data['title'])) ?>"><img class="img-responsive" src="<?php echo path($data['image_id']) ?>" alt="" /></a>
+		<a class="thumbnail" href="<?php echo url('recruits/'.$data['recruit_id'].'/'.url_title($data['title'])) ?>"><img class="img-fluid" src="<?php echo path($data['image_id']) ?>" alt="" /></a>
 	</div>
 	<?php endif ?>
 	<div class="col-md-<?php echo $data['image_id'] ? '8' : '12' ?>">

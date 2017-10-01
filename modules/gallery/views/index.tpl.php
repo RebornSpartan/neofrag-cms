@@ -1,5 +1,5 @@
 <?php if (!empty($data['category_image'])): ?>
-<img class="img-responsive" src="<?php echo path($data['category_image']) ?>" alt="" />
+<img class="img-fluid" src="<?php echo path($data['category_image']) ?>" alt="" />
 <?php endif ?>
 <div class="panel-body">
 	<?php if (!empty($data['gallery'])): ?>

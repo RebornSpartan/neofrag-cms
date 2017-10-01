@@ -21,7 +21,7 @@ class Index extends Controller_Module
 
 			if ($team['image_id'])
 			{
-				$panel->body('<a href="'.url('teams/'.$team['team_id'].'/'.$team['name']).'"><img class="img-responsive" src="'.path($team['image_id']).'" alt="" /></a>', FALSE);
+				$panel->body('<a href="'.url('teams/'.$team['team_id'].'/'.$team['name']).'"><img class="img-fluid" src="'.path($team['image_id']).'" alt="" /></a>', FALSE);
 			}
 
 			$panels[] = $panel;

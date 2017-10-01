@@ -1,5 +1,5 @@
 <?php if ($data['image_id']): ?>
-	<img class="img-responsive" src="<?php echo path($data['image_id']) ?>" alt="" />
+	<img class="img-fluid" src="<?php echo path($data['image_id']) ?>" alt="" />
 <?php endif ?>
 <div class="panel-body">
 	<div class="well text-center">

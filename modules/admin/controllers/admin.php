@@ -146,12 +146,12 @@ class Admin extends Controller_Module
 							->heading($this->lang('the_team'))
 							->body('	<div class="row">
 											<div class="col-md-6 text-center">
-												<p><img src="https://neofr.ag/images/team/foxley.jpg" class="img-circle" style="max-width: 100px;" alt="" /></p>
+												<p><img src="https://neofr.ag/images/team/foxley.jpg" class="rounded-circle" style="max-width: 100px;" alt="" /></p>
 												<div><b>Michaël BILCOT "FoxLey"</b></div>
 												<span class="text-muted">'.$this->lang('web_developer').'</span>
 											</div>
 											<div class="col-md-6 text-center">
-												<p><img src="https://neofr.ag/images/team/eresnova.jpg" class="img-circle" style="max-width: 100px;" alt="" /></p>
+												<p><img src="https://neofr.ag/images/team/eresnova.jpg" class="rounded-circle" style="max-width: 100px;" alt="" /></p>
 												<div><b>Jérémy VALENTIN "eResnova"</b></div>
 												<span class="text-muted">'.$this->lang('web_designer').'</span>
 											</div>

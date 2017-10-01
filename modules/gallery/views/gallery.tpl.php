@@ -1,5 +1,5 @@
 <?php if (!empty($data['image_id'])): ?>
-<img class="img-responsive" src="<?php echo path($data['image_id']) ?>" alt="" />
+<img class="img-fluid" src="<?php echo path($data['image_id']) ?>" alt="" />
 <?php endif ?>
 <?php if (!empty($data['description'])): ?>
 <div class="panel-body">
@@ -18,7 +18,7 @@
 		<?php foreach ($data['images'] as $image): ?>
 		<div class="image-item">
 			<a class="thumbnail" href="<?php echo url('gallery/image/'.$image['image_id'].'/'.url_title($image['title'])) ?>">
-				<img class="img-responsive" src="<?php echo path($image['thumbnail_file_id']) ?>" alt="" />
+				<img class="img-fluid" src="<?php echo path($image['thumbnail_file_id']) ?>" alt="" />
 			</a>
 		</div>
 		<?php endforeach ?>

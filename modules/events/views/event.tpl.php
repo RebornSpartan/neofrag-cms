@@ -1,4 +1,4 @@
-<a href="<?php echo $link = url('events/'.$data['event_id'].'/'.url_title($data['title'])) ?>"><img src="<?php echo path($data['image_id']) ?>" class="img-responsive" alt="" /></a>
+<a href="<?php echo $link = url('events/'.$data['event_id'].'/'.url_title($data['title'])) ?>"><img src="<?php echo path($data['image_id']) ?>" class="img-fluid" alt="" /></a>
 <?php if (!empty($data['match']['opponent']))://Matches ?>
 <div class="panel-body text-center">
 	<div class="row vcenter">
@@ -21,7 +21,7 @@
 		<?php endif ?>
 		<?php if ($data['match']['opponent']['image_id']): ?>
 		<div class="text-right col-xs-1 vcenter">
-			<img src="<?php echo path($data['match']['opponent']['image_id']) ?>" class="img-responsive" alt="" />
+			<img src="<?php echo path($data['match']['opponent']['image_id']) ?>" class="img-fluid" alt="" />
 		</div>
 		<?php endif ?>
 		<div class="text-left col-xs-<?php echo $data['match']['opponent']['image_id'] ? 4 : 5 ?> vcenter">
@@ -58,7 +58,7 @@
 			<div class="row vcenter">
 				<?php if ($data['rounds'][$i]['image_id']): ?>
 				<div class="col-xs-2 vcenter">
-					<img src="<?php echo path($data['rounds'][$i]['image_id']) ?>" class="img-responsive" alt="" />
+					<img src="<?php echo path($data['rounds'][$i]['image_id']) ?>" class="img-fluid" alt="" />
 				</div>
 				<?php endif ?>
 				<div class="col-xs-<?php echo $data['rounds'][$i]['image_id'] ? '3' : '5' ?> vcenter">

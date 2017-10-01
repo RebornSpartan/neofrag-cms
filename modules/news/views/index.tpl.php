@@ -1,6 +1,6 @@
 <?php if ($data['image']): ?>
 	<div class="pull-left">
-		<a class="thumbnail" href="<?php echo url('news/'.$data['news_id'].'/'.url_title($data['title'])) ?>"><img class="img-responsive" src="<?php echo path($data['image']) ?>" alt="" /></a>
+		<a class="thumbnail" href="<?php echo url('news/'.$data['news_id'].'/'.url_title($data['title'])) ?>"><img class="img-fluid" src="<?php echo path($data['image']) ?>" alt="" /></a>
 	</div>
 <?php endif ?>
 <p class="news-detail">

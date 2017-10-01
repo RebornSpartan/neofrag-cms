@@ -2,7 +2,7 @@
 	<div class="tab-pane" data-tab="dashboard">
 		<div class="row">
 			<div class="col-md-4">
-				<img class="img-responsive thumbnail no-margin" src="<?php echo image('thumbnail.png') ?>" alt="" />
+				<img class="img-fluid thumbnail no-margin" src="<?php echo image('thumbnail.png') ?>" alt="" />
 			</div>
 			<div class="col-md-8">
 				<h2><?php echo $this->lang('theme_administration') ?></h2>
