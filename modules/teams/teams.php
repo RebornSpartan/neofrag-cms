@@ -45,7 +45,7 @@ class Teams extends Module
 										->from('nf_teams t')
 										->join('nf_teams_lang tl',  'tl.team_id = t.team_id')
 										->join('nf_teams_users tu', 'tu.team_id = t.team_id')
-										->where('tl.lang', NeoFrag()->config->lang)
+										->where('tl.lang', NeoFrag()->config->lang->info()->name)
 										->group_by('t.team_id')
 										->get();
 

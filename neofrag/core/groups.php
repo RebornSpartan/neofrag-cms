@@ -51,7 +51,7 @@ class Groups extends Core
 							->join('nf_groups_lang gl',  'gl.group_id = g.group_id')
 							->join('nf_users_groups ug', 'ug.group_id = g.group_id')
 							->join('nf_users u',         'ug.user_id  = u.user_id AND u.deleted = "0"')
-							->where('gl.lang', $this->config->lang, 'OR')
+							->where('gl.lang', $this->config->lang->info()->name, 'OR')
 							->where('gl.lang', NULL)
 							->group_by('g.group_id')
 							->order_by('g.order')
