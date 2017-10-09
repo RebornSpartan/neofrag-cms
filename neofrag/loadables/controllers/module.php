@@ -17,25 +17,31 @@ abstract class Module extends Controller
 
 	public function title($title)
 	{
-		$this->add_data('module_title', $title);
+		$this->output->data->set('module', 'title', $title);
 		return $this;
 	}
 
 	public function subtitle($subtitle)
 	{
-		$this->add_data('module_subtitle', $subtitle);
+		$this->output->data->set('module', 'subtitle', $subtitle);
 		return $this;
 	}
 
 	public function icon($icon)
 	{
-		$this->add_data('module_icon', $icon);
+		$this->output->data->set('module', 'icon', $icon);
 		return $this;
 	}
 
 	public function add_action($url, $title, $icon = '')
 	{
-		$this->load->caller->add_action($url, $title, $icon);
+		$this->output->data->append('module', 'actions', [$url, $title, $icon]);
+		return $this;
+	}
+
+	public function ajax()
+	{
+		$this->output->data->set('module', 'ajax', TRUE);
 		return $this;
 	}
 }

@@ -33,13 +33,9 @@ abstract class Module extends Addon
 		return ['Modules', 'Module', 'fa-sticky-note-o', 'primary'];
 	}
 
-	private $_actions     = [];
-
-	protected $_output = '';
-
 	public function __toString()
 	{
-		return $this->_output;
+		return $this->output->data->get('module', 'content');
 	}
 
 	public function __init()
@@ -57,16 +53,6 @@ abstract class Module extends Addon
 			['reset',    'Réinitialiser', 'fa-refresh', 'danger'],
 			['delete',   'Désinstaller',  'fa-remove',  'danger']
 		];
-	}
-
-	public function add_action($url, $title, $icon = '')
-	{
-		$this->_actions[] = [$url, $title, $icon];
-	}
-
-	public function get_actions()
-	{
-		return $this->_actions;
 	}
 
 	public function get_method(&$args, $ignore_ajax = FALSE)

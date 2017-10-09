@@ -4,7 +4,11 @@
  * @author: Michaël BILCOT <michael.bilcot@neofr.ag>
  */
 
-class Row extends Childrenable
+namespace NF\NeoFrag\Displayables;
+
+use NF\NeoFrag\Displayable;
+
+class Row extends Displayable
 {
 	protected $_style;
 
@@ -27,7 +31,7 @@ class Row extends Childrenable
 				$child->id($i);
 			}
 
-			if ($live_editor = NeoFrag::live_editor() & NeoFrag::ROWS)
+			if ($live_editor = NEOFRAG_LIVE_EDITOR & NEOFRAG_ROWS)
 			{
 				$output .= '<div class="live-editor-row-header">
 								<div class="btn-group">
@@ -40,7 +44,7 @@ class Row extends Childrenable
 		}
 
 		$output .= '<div class="row'.(!empty($this->_style) ? ' '.$this->_style.($live_editor ? '" data-original-style="'.$this->_style : '') : '').'"'.($this->_id !== NULL ? ' data-row-id="'.$this->_id.'"' : '').'>
-						'.implode($this->_children).'
+						'.implode($this->_children->__toArray()).'
 					</div>';
 
 		return $live_editor ? '<div class="live-editor-row">'.$output.'</div>' : $output;

@@ -118,7 +118,6 @@ foreach ([
 			'input',
 			'location',
 			'notify',
-			'output',
 			'statistics',
 			'string',
 			'time',
@@ -190,4 +189,4 @@ foreach ([
 
 define('NEOFRAG_CORE', TRUE);
 
-echo $NeoFrag->router()->output;
+NeoFrag()->output();

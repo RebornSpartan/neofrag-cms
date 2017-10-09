@@ -4,7 +4,11 @@
  * @author: Michaël BILCOT <michael.bilcot@neofr.ag>
  */
 
-class Col extends Childrenable
+namespace NF\NeoFrag\Displayables;
+
+use NF\NeoFrag\Displayable;
+
+class Col extends Displayable
 {
 	protected $_size;
 
@@ -34,9 +38,9 @@ class Col extends Childrenable
 			}
 		}
 
-		$output = implode($this->_children);
+		$output = implode($this->_children->__toArray());
 
-		if ($this->_id !== NULL && NeoFrag::live_editor() & NeoFrag::COLS)
+		if ($this->_id !== NULL && NEOFRAG_LIVE_EDITOR & NEOFRAG_COLS)
 		{
 			$output = '<div class="live-editor-col">
 							<div class="btn-group">
