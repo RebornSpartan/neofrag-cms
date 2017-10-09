@@ -24,7 +24,9 @@ class Modal extends Library
 
 		$this->_header = is_a($title, 'NF\\NeoFrag\\Libraries\\Label') ? $title : $this->label($title, $icon);
 
-		return NeoFrag()->modals[] = $this;
+		$this->output->data->append('modals', $this);
+
+		return $this;
 	}
 
 	public function set_id($id)
@@ -76,7 +78,7 @@ class Modal extends Library
 
 		if ($this->url->ajax())
 		{
-			if ($js_load = output('js_load'))
+			if ($js_load = $this->output->js_load())
 			{
 				$content .= '<script type="text/javascript">
 								$(function(){
@@ -89,7 +91,7 @@ class Modal extends Library
 				'content' => $content
 			];
 
-			if ($css = output('css'))
+			if ($css = $this->output->css())
 			{
 				$output['css'] = $css;
 			}

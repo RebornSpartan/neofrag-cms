@@ -86,6 +86,21 @@ class Alpha_0_2 extends Install
 					->execute('DROP TABLE nf_settings_languages')
 					->execute('DROP TABLE nf_settings_smileys');
 
+		//Dispositions
+		$dispositions = [
+			'O:3:"Row"'           => 'O:27:"NF\\NeoFrag\\Displayables\\Row"',
+			'O:3:"Col"'           => 'O:27:"NF\\NeoFrag\\Displayables\\Col"',
+			'O:12:"Panel_widget"' => 'O:34:"NF\\NeoFrag\\Libraries\\Panels\\Widget"'
+		];
+
+		foreach ($this->db->from('nf_dispositions')->get() as $disposition)
+		{
+			$this->db	->where('disposition_id', $disposition['disposition_id'])
+						->update('nf_dispositions', [
+							'disposition' => "O:27:\"NF\\NeoFrag\\Libraries\\Array_\":1:{s:9:\"\0*\0_array\";".str_replace(array_keys($dispositions), array_values($dispositions), $disposition['disposition']).'}'
+						]);
+		}
+
 		//I18n
 		$this->db->execute('CREATE TABLE `nf_i18n` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

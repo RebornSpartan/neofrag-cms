@@ -91,26 +91,27 @@ class Admin extends Controller_Module
 				->css('table')
 				->js('table');
 
-		return [
-			$this->row(
-				$this->col(
-					$this	->panel()
-							->heading($this->lang('Liste des permissions').'<div class="pull-right">'.$this->button()->tooltip($this->lang('Réinitialiser toutes les permissions'))->icon('fa-refresh')->color('info access-reset')->compact()->outline()->data([
-								'module' => $module->info()->name,
-								'type'   => $type,
-								'id'     => $id
-							]).'</div>', 'fa-unlock-alt')
-							->body($this->view('index', [
-								'loader' => $module,
-								'module' => $module->info()->name,
-								'type'   => $type,
-								'id'     => $id,
-								'access' => $access
-							]))
-							->size('col-md-12 col-lg-5')
-				)
-			),
-			$this->panel_back()
-		];
+		return $this->array
+					->append(
+						$this->row(
+							$this->col(
+								$this	->panel()
+										->heading($this->lang('Liste des permissions').'<div class="pull-right">'.$this->button()->tooltip($this->lang('Réinitialiser toutes les permissions'))->icon('fa-refresh')->color('info access-reset')->compact()->outline()->data([
+											'module' => $module->info()->name,
+											'type'   => $type,
+											'id'     => $id
+										]).'</div>', 'fa-unlock-alt')
+										->body($this->view('index', [
+											'loader' => $module,
+											'module' => $module->info()->name,
+											'type'   => $type,
+											'id'     => $id,
+											'access' => $access
+										]))
+										->size('col-md-12 col-lg-5')
+							)
+						)
+					)
+					->append($this->panel_back());
 	}
 }
