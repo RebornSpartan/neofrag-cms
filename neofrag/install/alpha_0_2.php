@@ -152,5 +152,10 @@ class Alpha_0_2 extends Install
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
 
 		$this->db->where('name', 'nf_debug')->delete('nf_settings');
+
+		$this->db	->where('site', 'default')
+					->update('nf_settings', [
+						'site' => ''
+					]);
 	}
 }
