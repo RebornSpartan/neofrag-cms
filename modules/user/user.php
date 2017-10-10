@@ -30,7 +30,6 @@ class User extends Module
 				'messages/{id}/{url_title}'              => '_messages_read',
 				'messages/compose(?:/{id}/{url_title})?' => '_messages_compose',
 				'messages/delete/{id}/{url_title}'       => '_messages_delete',
-				'lost-password/{key_id}'                 => '_lost_password',
 				'auth/{url_title}'                       => '_auth',
 				'{id}/{url_title}'                       => '_member',
 				'ajax/{id}/{url_title}'                  => '_member',

@@ -10,31 +10,6 @@ use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
 class Index extends Controller_Module
 {
-	public function index()
-	{
-		if (!$this->user())
-		{
-			return $this->login();
-		}
-
-		$this	->title($this->lang('Espace membre'))
-				->js('user')
-				->css('jquery.mCustomScrollbar.min')
-				->js('jquery.mCustomScrollbar.min');
-
-		return $this->row(
-			$this->col(
-				$this->_panel_profile($user_profile),
-				$this->panel()->body($this->view('menu'), FALSE)
-			),
-			$this->col(
-				$this->_panel_infos(),
-				$this->panel()->body($this->view('index', $user_profile)),
-				$this->_panel_activities()
-			)
-		);
-	}
-
 	public function edit()
 	{
 		$this	->title($this->lang('Gérer mon compte'))
@@ -553,108 +528,10 @@ class Index extends Controller_Module
 		return $rows;
 	}
 
-	public function lost_password()
+	public function lost_password($token)
 	{
-		$this->title($this->lang('Mot de passe oublié ?'));
-
-		$this	->form()
-				->add_rules([
-					'email' => [
-						'label' => $this->lang('Email'),
-						'type'  => 'email',
-						'rules' => 'required',
-						'check' => function($value){
-							if (!NeoFrag()->db->select('1')->from('nf_user')->where('email', $value)->row())
-							{
-								return $this->lang('Addresse email introuvable');
-							}
-						}
-					]
-				])
-				->add_submit($this->lang('Valider'))
-				->add_back('user')
-				->fast_mode();
-
-		if ($this->form()->is_valid($post))
-		{
-			$this->email
-				->to($post['email'])
-				->subject($this->lang('Mot de passe oublié ?'))
-				->message('default', [
-					'content' => function($data){
-						return '<a href="'.url('user/lost-password/'.$data['key']).'">'.$this->lang('Réinitialisation de votre mot de passe').'</a>';
-					},
-					'key'     => $this->model()->add_key($this->db->select('id')->from('nf_user')->where('email', $post['email'])->row())
-				])
-				->send();
-
-			redirect_back('user');
-		}
-
-		return $this->panel()
-					->heading($this->lang('Mot de passe oublié ?'), 'fa-unlock-alt')
-					->body($this->form()->display());
-	}
-
-	public function _lost_password($key_id, $user_id)
-	{
-		$this->title($this->lang('Réinitialisation de votre mot de passe'));
-
-		$this	->form()
-				->add_rules([
-					'password' => [
-						'label' => $this->lang('Nouveau mot de passe'),
-						'icon'  => 'fa-lock',
-						'type'  => 'password',
-						'rules' => 'required'
-					],
-					'password_confirm' => [
-						'label' => $this->lang('Confirmation'),
-						'icon'  => 'fa-lock',
-						'type'  => 'password',
-						'rules' => 'required',
-						'check' => function($value, $post){
-							if ($post['password'] != $value)
-							{
-								return $this->lang('Les mots de passe doivent être identiques');
-							}
-						}
-					]
-				])
-				->add_submit($this->lang('Valider'))
-				->add_back('user')
-				->fast_mode();
-
-		if ($this->form()->is_valid($post))
-		{
-			$this->email
-				->to($this->db->select('email')->from('nf_user')->where('id', $user_id)->row())
-				->subject($this->lang('Mot de passe réinitialisé'))
-				->message('default', [
-					'content' => $this->lang('Votre mot de passe a bien été réinitialisé')
-				])
-				->send();
-
-			$this->user->login($user_id);
-
-			$this->model()	->update_password($post['password'])
-							->delete_key($key_id);
-
-			foreach ($this->user->get_sessions() as $session)
-			{
-				if ($session['session_id'] != $this->session->id)
-				{
-					//TODO ajouter une alerte pour ces sessions pour expliquer pk ils sont déco
-					$this->session->disconnect($session['session_id']);
-				}
-			}
-
-			redirect_back('user');
-		}
-
-		return $this->panel()
-					->heading($this->lang('Réinitialisation de votre mot de passe'), 'fa-lock')
-					->body($this->form()->display());
+		$this->session->append('modals', 'ajax/user/lost-password/'.$token->id);
+		redirect();
 	}
 
 	public function logout()
