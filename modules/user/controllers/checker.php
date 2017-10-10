@@ -44,26 +44,13 @@ class Checker extends Module_Checker
 		}
 	}
 
-	public function login($error = 0)
+	public function lost_password($token)
 	{
-		if ($this->user())
-		{
-			redirect('user');
-		}
+		$this->error_if($this->user());
 
-		return [$error];
-	}
-
-	public function _lost_password($key_id)
-	{
-		if ($this->user())
+		if ($token = $this->model2('token', $token))
 		{
-			redirect('user');
-		}
-
-		if ($user_id = $this->model()->check_key($key_id))
-		{
-			return [$key_id, (int)$user_id];
+			return [$token];
 		}
 	}
 
