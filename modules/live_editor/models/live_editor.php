@@ -93,11 +93,6 @@ class Live_Editor extends Model
 	{
 		foreach (NeoFrag()->model2('addon')->get('widget') as $widget)
 		{
-			if ($widget->name == 'error')
-			{
-				continue;
-			}
-
 			$widgets[$widget->name] = $widget->get_title();
 
 			if (!empty($widget->info()->types))

@@ -12,6 +12,9 @@ class Alpha_0_2 extends Install
 {
 	public function up()
 	{
+		$this->db	->where('name', 'error')
+					->delete('nf_settings_addons');
+
 		$this->db->insert('nf_settings_addons', [
 			'name' => 'admin',
 			'type' => 'theme'
