@@ -8,7 +8,7 @@ namespace NF\Modules\Live_Editor\Controllers;
 
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
-class Index extends Controller_Module
+class Admin extends Controller_Module
 {
 	public function index()
 	{
@@ -32,10 +32,12 @@ class Index extends Controller_Module
 			'index' => NeoFrag()->lang('Accueil')
 		], $modules);
 
+		$theme = $this->theme($this->config->nf_default_theme);
+
 		return $this->view('index', [
 			'modules'       => $modules,
-			'styles_row'    => '',//$this->output->theme()->styles_row(),//TODO 0.1.7
-			'styles_widget' => ''//$this->output->theme()->styles_widget()
+			'styles_row'    => $theme->styles_row(),
+			'styles_widget' => $theme->styles_widget()
 		]);
 	}
 }
