@@ -31,7 +31,7 @@ class Row extends Displayable
 				$child->id($i);
 			}
 
-			if ($live_editor = NEOFRAG_LIVE_EDITOR & NEOFRAG_ROWS)
+			if ($live_editor = $this->output->live_editor() & \NF\NeoFrag\Core\Output::ROWS)
 			{
 				$output .= '<div class="live-editor-row-header">
 								<div class="btn-group">

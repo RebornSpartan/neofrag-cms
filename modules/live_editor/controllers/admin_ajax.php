@@ -8,7 +8,7 @@ namespace NF\Modules\Live_Editor\Controllers;
 
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
-class Ajax extends Controller_Module
+class Admin_Ajax extends Controller_Module
 {
 	public function zone_fork($disposition_id, $disposition, $url, $theme, $page, $zone)
 	{

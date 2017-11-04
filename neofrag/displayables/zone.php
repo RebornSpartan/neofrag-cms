@@ -10,14 +10,11 @@ use NF\NeoFrag\Displayable;
 
 class Zone extends Displayable
 {
-	public function __invoke($disposition_id, $disposition, $page, $zone_id)
+	public function __invoke($disposition_id, $output, $page, $zone_id)
 	{
-		//$output = display($disposition, NEOFRAG_LIVE_EDITOR ? $zone_id : NULL);//TODO
-		$output = $disposition;
-
-		if (NEOFRAG_LIVE_EDITOR)
+		if ($live_editor = $this->output->live_editor())
 		{
-			if (NEOFRAG_LIVE_EDITOR & NEOFRAG_ZONES)
+			if ($live_editor & \NF\NeoFrag\Core\Output::ZONES)
 			{
 				$output = '	<div class="pull-right">
 								'.($page == '*' ? '<button type="button" class="btn btn-link live-editor-fork" data-enabled="0">'.icon('fa-toggle-off').' '.$this->lang('Disposition commune').'</button>' : '<button type="button" class="btn btn-link live-editor-fork" data-enabled="1">'.icon('fa-toggle-on').' '.$this->lang('Disposition spécifique à la page').'</button>').'
@@ -26,7 +23,7 @@ class Zone extends Displayable
 							$output;
 			}
 
-			$output = '<div'.(NEOFRAG_LIVE_EDITOR & NEOFRAG_ZONES ? ' class="live-editor-zone"' : '').' data-disposition-id="'.$disposition_id.'">'.$output.'</div>';
+			$output = '<div'.($live_editor & \NF\NeoFrag\Core\Output::ZONES ? ' class="live-editor-zone"' : '').' data-disposition-id="'.$disposition_id.'">'.$output.'</div>';
 		}
 
 		return $output;

@@ -10,6 +10,11 @@ use NF\NeoFrag\Core;
 
 class Output extends Core
 {
+	const ZONES   = 2;
+	const ROWS    = 4;
+	const COLS    = 8;
+	const WIDGETS = 16;
+
 	public $data;
 
 	protected $_module;
@@ -235,8 +240,7 @@ class Output extends Core
 
 			notifications();
 
-			//TODO
-			if (0 && $this->_module->info()->name == 'live_editor')
+			if (!$this->_error && $this->_module->info()->name == 'live_editor')
 			{
 				$body = $this->_module;
 			}
@@ -244,11 +248,11 @@ class Output extends Core
 			{
 				$body = '';
 
-				if (NEOFRAG_LIVE_EDITOR)
+				if ($this->live_editor())
 				{
 					$body = '<div id="live_editor" data-module-title="'.utf8_htmlentities($this->url->segments[0] == 'index' ? $this->label($this->lang('Accueil'), 'fa-map-marker') : $this->data['module_title']).'"></div>';
 
-					$this	->css('font.open-sans.300.400.600.700.800')
+					parent	::css('font.open-sans.300.400.600.700.800')
 							->css('live-editor');
 				}
 
@@ -387,6 +391,17 @@ class Output extends Core
 	{
 		$json = parent::json($json);
 		$this->trigger('output', $json);
+	}
+
+	public function live_editor()
+	{
+		if (($live_editor = post('live_editor')) && $this->user->admin)
+		{
+			$this->session->set('live_editor', $live_editor);
+			return $live_editor;
+		}
+
+		return 0;
 	}
 
 	public function email($callback)

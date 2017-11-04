@@ -257,7 +257,7 @@ var modal_delete = function(message, callback){
 };
 
 $(function(){
-	var $widgets = $('[data-mode="<?php echo NeoFrag::WIDGETS ?>"]');
+	var $widgets = $('[data-mode="<?php echo \NF\NeoFrag\Core\Output::WIDGETS ?>"]');
 
 	$('form[target="live-editor-iframe"]').submit();
 
@@ -281,11 +281,11 @@ $(function(){
 	$('.live-editor-mode').click(function(){
 		$(this).toggleClass('active');
 
-		if ($(this).data('mode') == <?php echo NeoFrag::WIDGETS ?>){
+		if ($(this).data('mode') == <?php echo \NF\NeoFrag\Core\Output::WIDGETS ?>){
 			return;
 		}
 
-		var mode = <?php echo NeoFrag::LIVE_EDITOR ?>;
+		var mode = <?php echo $this->output->live_editor() ?>;
 		$('.live-editor-mode.active').each(function(){
 			mode += $(this).data('mode');
 		});
@@ -311,7 +311,7 @@ $(function(){
 		$(this).addClass('active');
 	});
 
-	$('.live-editor-iframe iframe').bind('load', function(){
+	$('.live-editor-iframe iframe').on('load', function(){
 		var $iframe = $(this).contents();
 
 		$('#live-editor-map').html($iframe.find('#live_editor').data('module-title'));
@@ -388,7 +388,7 @@ $(function(){
 				disposition_id: $this.data('disposition-id'),
 				live_editor: $('input[type="hidden"][name="live_editor"]').val()
 			}, function(data){
-				var $rows_button = $('.live-editor-mode[data-mode="<?php echo NeoFrag::ROWS ?>"]');
+				var $rows_button = $('.live-editor-mode[data-mode="<?php echo \NF\NeoFrag\Core\Output::ROWS ?>"]');
 
 				if (!$rows_button.hasClass('active')){
 					$rows_button.trigger('click');
@@ -475,7 +475,7 @@ $(function(){
 				row_id: $row.data('row-id'),
 				live_editor: $('input[type="hidden"][name="live_editor"]').val()
 			}, function(data){
-				var $cols_button = $('.live-editor-mode[data-mode="<?php echo NeoFrag::COLS ?>"]');
+				var $cols_button = $('.live-editor-mode[data-mode="<?php echo \NF\NeoFrag\Core\Output::COLS ?>"]');
 
 				if (!$cols_button.hasClass('active')){
 					$cols_button.trigger('click');

@@ -8,7 +8,7 @@ namespace NF\Modules\Live_Editor\Controllers;
 
 use NF\NeoFrag\Loadables\Controllers\Module_Checker;
 
-class Ajax_Checker extends Module_Checker
+class Admin_Ajax_Checker extends Module_Checker
 {
 	public function zone_fork()
 	{
