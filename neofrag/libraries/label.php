@@ -8,7 +8,7 @@ namespace NF\NeoFrag\Libraries;
 
 class Label extends Html
 {
-	protected $_title;
+	protected $_title = '';
 	protected $_icon;
 	protected $_url;
 	protected $_tooltip;
@@ -52,7 +52,7 @@ class Label extends Html
 
 			if ($this->_title)
 			{
-				$output[] = $this->_title;
+				$output[] = $this->lang($this->_title);
 			}
 
 			$content = implode(' ', $output);
@@ -123,13 +123,13 @@ class Label extends Html
 
 	public function tooltip($title)
 	{
-		$this->_tooltip = $title;
+		$this->_tooltip = $this->lang($title);
 		return $this;
 	}
 
 	public function popover($content, $title = '')
 	{
-		$this->_popover = [$content, $title];
+		$this->_popover = [$this->lang($content), $this->lang($title)];
 		return $this;
 	}
 
