@@ -91,7 +91,7 @@ class Index extends Controller_Module
 
 					if (($name = url_title($result[0]->info()->name)) == $module_name)
 					{
-						foreach ($this->pagination->fix_items_per_page(10)->get_data($result[2], $page) as $data)
+						foreach ($this->module->pagination->fix_items_per_page(10)->get_data($result[2], $page) as $data)
 						{
 							$content[] = $result[1]->method('detail', [$data, $keywords]);
 						}
