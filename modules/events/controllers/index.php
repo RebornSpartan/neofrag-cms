@@ -104,7 +104,7 @@ class Index extends Controller_Module
 	{
 		$this	->title($title)
 				->breadcrumb($title)
-				->table
+				->table()
 				->add_columns([
 					[
 						'content' => function($data){
@@ -217,7 +217,7 @@ class Index extends Controller_Module
 					]), FALSE),
 			$this->user() ? $this	->panel()
 									->heading('<a name="participants"></a>Participants'.(isset($modal) ? '<div class="pull-right">'.$this->button()->title('Invitations')->icon('fa-user-plus')->modal($modal).'</div>' : ''), 'fa-users')
-									->body($this->table->display()) : NULL,
+									->body($this->table()->display()) : NULL,
 			$this->comments->display('events', $event_id),
 			$this->button_back()
 		];

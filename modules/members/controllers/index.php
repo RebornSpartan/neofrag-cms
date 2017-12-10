@@ -12,7 +12,7 @@ class Index extends Controller_Module
 {
 	public function index($members)
 	{
-		$this	->table
+		$this	->table()
 				->add_columns([
 					[
 						'content' => function($data){
@@ -43,7 +43,7 @@ class Index extends Controller_Module
 
 		return $this->panel()
 					->heading()
-					->body($this->table->display());
+					->body($this->table()->display());
 	}
 
 	public function _group($title, $members)

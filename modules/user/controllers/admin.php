@@ -16,7 +16,7 @@ class Admin extends Controller_Module
 				->icon('fa-users');
 
 		$table_groups = $this
-			->table
+			->table()
 			->add_columns([
 				[
 					'content' => function($data){
@@ -59,7 +59,7 @@ class Admin extends Controller_Module
 			->save();
 
 		$table_users = $this
-			->table
+			->table()
 			->add_columns([
 				[
 					'title'   => $this->lang('Membre'),
@@ -193,7 +193,7 @@ class Admin extends Controller_Module
 			->save();
 
 		$sessions = $this
-			->table
+			->table()
 			->add_columns([
 				[
 					'content' => function($data){
@@ -429,7 +429,7 @@ class Admin extends Controller_Module
 		$this	->title($this->lang('Sessions'))
 				->subtitle($this->lang('Liste des sessions actives'))
 				->icon('fa-globe')
-				->table
+				->table()
 				->preprocessing(function($row){
 					$user_data = unserialize($row['user_data']);
 
@@ -540,7 +540,7 @@ class Admin extends Controller_Module
 
 		return $this->panel()
 					->heading($this->lang('Sessions'), 'fa-globe')
-					->body($this->table->display());
+					->body($this->table()->display());
 	}
 
 	public function _sessions_delete($session_id, $username)
