@@ -52,7 +52,7 @@ class Events extends Module
 
 	public function settings()
 	{
-		$this	->form
+		$this	->form()
 				->add_rules([
 					'events_per_page' => [
 						'label'       => 'Nombre d\'événement par page',
@@ -70,7 +70,7 @@ class Events extends Module
 				->add_submit($this->lang('Éditer'))
 				->add_back('admin/addons#modules');
 
-		if ($this->form->is_valid($post))
+		if ($this->form()->is_valid($post))
 		{
 			$this	->config('events_per_page', $post['events_per_page'])
 					->config('events_alert_mp', in_array('on', $post['events_alert_mp']));
@@ -79,7 +79,7 @@ class Events extends Module
 		}
 
 		return $this->panel()
-					->body($this->form->display());
+					->body($this->form()->display());
 	}
 
 	public function permissions()

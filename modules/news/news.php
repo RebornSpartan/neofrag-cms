@@ -112,7 +112,7 @@ class News extends Module
 
 	public function settings()
 	{
-		$this	->form
+		$this	->form()
 				->add_rules([
 					'news_per_page' => [
 						'label' => $this->lang('Actualités par page'),
@@ -124,13 +124,13 @@ class News extends Module
 				->add_submit($this->lang('Éditer'))
 				->add_back('admin/addons#modules');
 
-		if ($this->form->is_valid($post))
+		if ($this->form()->is_valid($post))
 		{
 			$this->config('news_per_page', $post['news_per_page']);
 
 			redirect_back('admin/addons#modules');
 		}
 
-		return $this->panel()->body($this->form->display());
+		return $this->panel()->body($this->form()->display());
 	}
 }

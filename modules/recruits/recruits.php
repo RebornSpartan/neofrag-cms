@@ -42,7 +42,7 @@ class Recruits extends Module
 
 	public function settings()
 	{
-		$this	->form
+		$this	->form()
 				->add_rules([
 					[
 						'label'       => 'Paramètres des offres',
@@ -85,7 +85,7 @@ class Recruits extends Module
 				->add_submit($this->lang('Éditer'))
 				->add_back('admin/addons#modules');
 
-		if ($this->form->is_valid($post))
+		if ($this->form()->is_valid($post))
 		{
 			$this	->config('recruits_per_page', $post['recruits_per_page'])
 					->config('recruits_hide_unavailable', in_array('on', $post['recruits_hide_unavailable']))
@@ -97,7 +97,7 @@ class Recruits extends Module
 		}
 
 		return $this->panel()
-					->body($this->form->display());
+					->body($this->form()->display());
 	}
 
 	public function permissions()

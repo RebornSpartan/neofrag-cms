@@ -58,16 +58,16 @@ class Admin extends Controller_Module
 	{
 		$this	->title('Confirmation de suppression')
 				->subtitle($module->get_title())
-				->form
+				->form()
 				->confirm_deletion($this->lang('Confirmation de suppression'), 'Êtes-vous sûr(e) de vouloir supprimer le module <b>'.$module->get_title().'</b> ?');
 
-		if ($this->form->is_valid())
+		if ($this->form()->is_valid())
 		{
 			$module->uninstall();
 			return 'OK';
 		}
 
-		echo $this->form->display();
+		echo $this->form()->display();
 	}
 
 	public function _theme_settings($theme, $controller)
@@ -83,15 +83,15 @@ class Admin extends Controller_Module
 	{
 		$this	->title('Confirmation de suppression')
 				->subtitle($theme->get_title())
-				->form
+				->form()
 				->confirm_deletion($this->lang('Confirmation de suppression'), 'Êtes-vous sûr(e) de vouloir supprimer le thème <b>'.$theme->get_title().'</b> ?');
 
-		if ($this->form->is_valid())
+		if ($this->form()->is_valid())
 		{
 			$theme->uninstall();
 			return 'OK';
 		}
 
-		echo $this->form->display();
+		echo $this->form()->display();
 	}
 }

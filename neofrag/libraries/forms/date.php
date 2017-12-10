@@ -31,7 +31,7 @@ class Date extends Text
 
 				if ($this->_required)
 				{
-					$this->_errors[] = $this->lang('required_input');
+					$this->_errors[] = $this->lang('Veuillez remplir ce champ');
 				}
 			}
 
