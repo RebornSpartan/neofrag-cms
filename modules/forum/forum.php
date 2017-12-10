@@ -53,12 +53,12 @@ class Forum extends Module
 		return [
 			'category' => [
 				'get_all' => function(){
-					return NeoFrag()->db->select('category_id', 'CONCAT_WS(" ", "{lang category}", title)')->from('nf_forum_categories')->get();
+					return NeoFrag()->db->select('category_id', 'title')->from('nf_forum_categories')->get();
 				},
 				'check'   => function($category_id){
 					if (($category = NeoFrag()->db->select('title')->from('nf_forum_categories')->where('category_id', $category_id)->row()) !== [])
 					{
-						return '{lang category} '.$category;
+						return $category;
 					}
 				},
 				'init'    => [
@@ -134,13 +134,13 @@ class Forum extends Module
 		$this	->form
 				->add_rules([
 					'topics_per_page' => [
-						'label' => '{lang topics_per_page}',
+						'label' => $this->lang('topics_per_page'),
 						'value' => $this->config->forum_topics_per_page,
 						'type'  => 'number',
 						'rules' => 'required'
 					],
 					'messages_per_page' => [
-						'label' => '{lang messages_per_page}',
+						'label' => $this->lang('messages_per_page'),
 						'value' => $this->config->forum_messages_per_page,
 						'type'  => 'number',
 						'rules' => 'required'
