@@ -16,15 +16,14 @@ class Pagination extends Library
 	private $_overload       = TRUE;
 	private $_fixed          = FALSE;
 
-	public function get_data($data = [], $page = '')
-	{
-		if ($page === '' && empty($data) && !empty($this->_data))
-		{
-			return $this->_data;
-		}
+	protected $_db;
 
-		$this->_data     = $data;
-		$this->_overload = FALSE;
+	public function __invoke($db, $page, $limit = NULL)
+	{
+		if ($limit !== NULL)
+		{
+			$this->fix_items_per_page($limit);
+		}
 
 		if ($page == 'all')
 		{
@@ -45,6 +44,38 @@ class Pagination extends Library
 			throw new Exception(NeoFrag::UNFOUND);
 		}
 
+		if ($db)
+		{
+			$this->_db = $db;
+		}
+
+		return $this;
+	}
+
+	public function limit()
+	{
+		if ($this->_items_per_page && $this->_db)
+		{
+			$db = clone $this->_db;
+			$this->_db->limit(($this->_page - 1) * $this->_items_per_page, $this->_items_per_page);
+			$this->_db = $db;
+		}
+
+		return $this;
+	}
+
+	public function get_data($data = [], $page = '')
+	{
+		if ($page === '' && empty($data) && !empty($this->_data))
+		{
+			return $this->_data;
+		}
+
+		$this->_data     = $data;
+		$this->_overload = FALSE;
+
+		$this(NULL, $page);
+
 		if (empty($this->_data))
 		{
 			return [];
@@ -63,11 +94,15 @@ class Pagination extends Library
 		}
 	}
 
-	public function count()
+	public function count($total = NULL)
 	{
 		static $count;
 
-		if ($count === NULL)
+		if ($total)
+		{
+			$count = $total;
+		}
+		else if ($count === NULL)
 		{
 			$count = count($this->_data);
 		}
@@ -77,12 +112,30 @@ class Pagination extends Library
 
 	public function get_pagination($size = 'mini')
 	{
-		if (!$this->_data || $this->count() <= $this->_items_per_page || $this->_items_per_page == 0)
+		if ($this->_db)
 		{
-			return '';
+			$this->count($total = $this->_db()->select('COUNT(*)')->row());
+
+			if ($total && ($this->_page - 1) * $this->_items_per_page >= $total)
+			{
+				$this->error();
+			}
 		}
 
-		return $this->display($this->get_url(), $this->count(), $size, $this->_items_per_page, $this->_fixed, $this->_page);
+		if ($this->_items_per_page && $this->count() > $this->_items_per_page)
+		{
+			return $this->display($this->get_url(), $this->count(), $size, $this->_items_per_page, $this->_fixed, $this->_page);
+		}
+
+		return '';
+	}
+
+	public function row()
+	{
+		if ($pagination = $this->get_pagination())
+		{
+			return parent::row($this->col($pagination));
+		}
 	}
 
 	public function display($base_url, $nb_pages, $size = 'sm', $items_per_page = 0, $fixed = TRUE, $current_page = 0)
@@ -128,7 +181,9 @@ class Pagination extends Library
 			}
 		}
 
-		return '<div class="pagination">'.implode(' ', $buttons).'</div>';
+		return $this->html()
+					->attr('class', 'pagination')
+					->content($buttons);
 	}
 
 	public function get_url()
