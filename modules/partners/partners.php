@@ -36,7 +36,7 @@ class Partners extends Module
 
 	public function settings()
 	{
-		$this	->form
+		$this	->form()
 				->add_rules([
 					'partners_logo_display' => [
 						'label'       => 'Logo',
@@ -53,13 +53,13 @@ class Partners extends Module
 				->add_submit($this->lang('Éditer'))
 				->add_back('admin/addons#modules');
 
-		if ($this->form->is_valid($post))
+		if ($this->form()->is_valid($post))
 		{
 			$this->config('partners_logo_display', $post['partners_logo_display']);
 
 			redirect_back('admin/addons#modules');
 		}
 
-		return $this->panel()->body($this->form->display());
+		return $this->panel()->body($this->form()->display());
 	}
 }

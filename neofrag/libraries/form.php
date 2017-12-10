@@ -32,6 +32,8 @@ class Form extends Library
 		'legend'
 	];
 
+	static protected $_form;
+
 	private $_buttons          = [];
 	private $_confirm_deletion = [];
 	private $_errors           = [];
@@ -56,6 +58,17 @@ class Form extends Library
 		}
 
 		return $tokens[$id];
+	}
+
+	public function __invoke()
+	{
+		if (!static::$_form)
+		{
+			static::$_form = $this;
+			$this->id = $this->__id();
+		}
+
+		return static::$_form;
 	}
 
 	public function add_rules($rules, $values = [])
@@ -280,7 +293,17 @@ class Form extends Library
 
 		if ($is_file && !empty($_FILES[$this->token()]['error'][$var]) && $_FILES[$this->token()]['error'][$var] != 4)
 		{
-			return NeoFrag()->lang('file_transfer_error_'.$_FILES[$this->token()]['error'][$var]);
+			$errors = [
+				1 => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
+				2 => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML',
+				3 => 'Le fichier n\'a été que partiellement téléchargé',
+				4 => 'Aucun fichier n\'a été téléchargé',
+				6 => 'Un dossier temporaire est manquant',
+				7 => 'Échec de l\'écriture du fichier sur le disque',
+				8 => 'Une extension PHP a arrêté l\'envoi de fichier'
+			];
+
+			return NeoFrag()->lang($errors[$_FILES[$this->token()]['error'][$var]]);
 		}
 
 		if (isset($options['check']) && is_callable($options['check']))
@@ -501,9 +524,15 @@ class Form extends Library
 		$output .= '</fieldset>
 				</form>';
 
-		$this->reset();
+		$this->save();
 
 		return $output;
+	}
+
+	public function save()
+	{
+		static::$_form = NULL;
+		return $this;
 	}
 
 	private function _display_button($button)

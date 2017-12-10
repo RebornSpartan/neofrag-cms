@@ -131,7 +131,7 @@ class Forum extends Module
 
 	public function settings()
 	{
-		$this	->form
+		$this	->form()
 				->add_rules([
 					'topics_per_page' => [
 						'label' => $this->lang('Sujets par page'),
@@ -149,7 +149,7 @@ class Forum extends Module
 				->add_submit($this->lang('Éditer'))
 				->add_back('admin/addons#modules');
 
-		if ($this->form->is_valid($post))
+		if ($this->form()->is_valid($post))
 		{
 			$this	->config('forum_topics_per_page',   $post['topics_per_page'])
 					->config('forum_messages_per_page', $post['messages_per_page']);
@@ -157,7 +157,7 @@ class Forum extends Module
 			redirect_back('admin/addons#modules');
 		}
 
-		return $this->panel()->body($this->form->display());
+		return $this->panel()->body($this->form()->display());
 	}
 
 	public function __init()
