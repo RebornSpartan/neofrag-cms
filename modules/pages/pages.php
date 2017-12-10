@@ -51,7 +51,7 @@ class Pages extends Module
 		}
 		else if ($title === NULL)
 		{
-			$title = $this->lang($this->info()->title, NULL);
+			$title = $this->info()->title;
 		}
 
 		return $title;

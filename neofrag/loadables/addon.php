@@ -130,7 +130,7 @@ abstract class Addon extends NeoFrag implements \NF\NeoFrag\Loadable
 		}
 		else if ($title === NULL)
 		{
-			$title = $this->lang($this->info()->title, NULL);
+			$title = $this->info()->title;
 		}
 
 		return $title;
