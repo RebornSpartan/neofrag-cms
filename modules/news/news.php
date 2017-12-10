@@ -115,7 +115,7 @@ class News extends Module
 		$this	->form
 				->add_rules([
 					'news_per_page' => [
-						'label' => '{lang news_per_page}',
+						'label' => $this->lang('news_per_page'),
 						'value' => $this->config->news_per_page,
 						'type'  => 'number',
 						'rules' => 'required'
