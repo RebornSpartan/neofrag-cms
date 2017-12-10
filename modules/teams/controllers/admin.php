@@ -14,7 +14,7 @@ class Admin extends Controller_Module
 	{
 		$this->subtitle($this->lang('Liste des équipes'));
 
-		$teams = $this	->table
+		$teams = $this	->table()
 						->add_columns([
 							[
 								'content' => function($data){
@@ -57,7 +57,7 @@ class Admin extends Controller_Module
 						->no_data($this->lang('Il n\'y a pas encore d\'équipe'))
 						->display();
 
-		$roles = $this	->table
+		$roles = $this	->table()
 							->add_columns([
 								[
 									'content' => function($data){
@@ -203,7 +203,7 @@ class Admin extends Controller_Module
 			refresh();
 		}
 
-		$this	->table
+		$this	->table()
 				->add_columns([
 					[
 						'content' => function($data){
@@ -238,7 +238,7 @@ class Admin extends Controller_Module
 			$this->col(
 				$this	->panel()
 						->heading($this->lang('Joueurs'), 'fa-users')
-						->body($this->table->display())
+						->body($this->table()->display())
 						->footer($this->view('users', [
 							'users'   => $users,
 							'roles'   => $roles,

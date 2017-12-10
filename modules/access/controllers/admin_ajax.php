@@ -72,7 +72,7 @@ class Admin_Ajax extends Controller_Module
 
 	public function users($action, $title, $icon, $module_name, $id)
 	{
-		$this	->table
+		$this	->table()
 				->add_columns([
 						[
 						'title'   => $this->lang('Membre'),
@@ -155,7 +155,7 @@ class Admin_Ajax extends Controller_Module
 		return $this->view('users', [
 			'title' => $title,
 			'icon'  => $icon,
-			'users' => $this->table->display()
+			'users' => $this->table()->display()
 		]);
 	}
 
