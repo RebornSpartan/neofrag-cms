@@ -16,6 +16,7 @@ class Modal extends Library
 	protected $_body_tags;
 	protected $_size;
 	protected $_form;
+	protected $_callback;
 
 	public function __invoke($title, $icon = '')
 	{
@@ -39,6 +40,13 @@ class Modal extends Library
 		if ($this->_body)
 		{
 			$content .= $this->_body_tags ? '<div class="modal-body">'.$this->_body.'</div>' : $this->_body;
+		}
+
+		if ($this->_callback)
+		{
+			$this->_callback->check();
+
+			$content .= $this->form_hidden('_', $this->_callback->token());
 		}
 
 		$content = '<div class="modal-header">
@@ -154,5 +162,20 @@ class Modal extends Library
 		$this->output->json([
 			'modal' => 'dispose'
 		]);
+	}
+
+	public function callback($callback)
+	{
+		if (!is_a($callback, 'NF\\NeoFrag\\Libraries\\Form2'))
+		{
+			$callback = $this	->form2()
+								->success(function() use ($callback){
+									$callback();
+								});
+		}
+
+		$this->_callback = $callback;
+
+		return $this;
 	}
 }
