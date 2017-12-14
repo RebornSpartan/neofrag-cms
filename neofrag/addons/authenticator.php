@@ -20,6 +20,11 @@ abstract class Authenticator extends Addon
 		return ['Authentificateurs', 'Authentificateur', 'fa-lock', 'info'];
 	}
 
+	static public function url()
+	{
+		return (NeoFrag()->url->https ? 'https' : 'http').'://'.NeoFrag()->url->host.NeoFrag()->url->base.'user/auth';
+	}
+
 	public function __actions()
 	{
 		return [
@@ -45,7 +50,7 @@ abstract class Authenticator extends Addon
 	{
 		foreach ($this->_keys as $key)
 		{
-			if (empty($this->__settings->$key))
+			if (empty($this->settings()->$key))
 			{
 				return FALSE;
 			}
@@ -90,9 +95,14 @@ abstract class Authenticator extends Addon
 	public function config()
 	{
 		return [
-			'applicationId'     => $this->__settings->id,
-			'applicationSecret' => $this->__settings->secret
+			'applicationId'     => $this->settings()->id,
+			'applicationSecret' => $this->settings()->secret
 		];
+	}
+
+	public function settings()
+	{
+		return $this->__settings->{$this->url->production() ? 'prod' : 'dev'};
 	}
 
 	public function __toString()
@@ -109,7 +119,7 @@ abstract class Authenticator extends Addon
 	protected function _params()
 	{
 		return [
-			'callback' => ($this->url->https ? 'https' : 'http').'://'.$this->url->host.$this->url->base.'user/auth/'.url_title($this->info()->name)
+			'callback' => static::url().'/'.url_title($this->info()->name)
 		];
 	}
 }
