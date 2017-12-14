@@ -15,6 +15,27 @@ class Ajax extends Controller_Module
 		return $this->view('profile_mini', $this->model()->get_user_profile($user_id));
 	}
 
+	public function auth()
+	{
+		return $this->modal('Connexion rapide', 'fa-user-circle')
+					->body($this->view('authenticators'))
+					->button($this	->button()
+									->title('Mot de passe oublié ?')
+									->color('default')
+									->modal_ajax('ajax/user/lost-password')
+					)
+					->button($this	->button()
+									->title('Créer un compte')
+									->color('secondary')
+									->modal_ajax('ajax/user/register')
+					)
+					->button($this	->button()
+									->title('Se connecter')
+									->color('primary')
+									->modal_ajax('ajax/user/login')
+					);
+	}
+
 	public function login()
 	{
 		return $this->form2()

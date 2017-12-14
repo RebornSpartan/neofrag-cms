@@ -54,24 +54,19 @@ class Checker extends Module_Checker
 		}
 	}
 
-	public function _auth($provider)
+	public function auth($provider)
 	{
-		if ($this->user())
-		{
-			redirect('user');
-		}
-
-		$provider = str_replace('-', '_', strtolower($provider));
-
-		if (	($settings = $this->db	->select('settings')
-										->from('nf_settings_authenticators')
-										->where('name', $provider)
-										->where('is_enabled', TRUE)
-										->row()) &&
-				($authenticator = $this->authenticator($provider, TRUE, unserialize($settings))))
+		if (($authenticator = $this->authenticator(str_replace('-', '_', $provider))) && $authenticator->is_setup())
 		{
 			return [$authenticator];
 		}
+	}
+
+	public function _auth()
+	{
+		$this->error_if($this->user());
+
+		return [];
 	}
 
 	public function logout()

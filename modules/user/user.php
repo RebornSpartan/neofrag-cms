@@ -23,6 +23,7 @@ class User extends Module
 			'routes'      => [
 				//Index
 				'sessions{pages}'                        => 'sessions',
+				'auth'                                   => '_auth',
 				'sessions/delete/{key_id}'               => '_session_delete',
 				'messages{pages}'                        => '_messages_inbox',
 				'messages/sent{pages}'                   => '_messages_sent',
@@ -30,7 +31,6 @@ class User extends Module
 				'messages/{id}/{url_title}'              => '_messages_read',
 				'messages/compose(?:/{id}/{url_title})?' => '_messages_compose',
 				'messages/delete/{id}/{url_title}'       => '_messages_delete',
-				'auth/{url_title}'                       => '_auth',
 				'{id}/{url_title}'                       => '_member',
 				'ajax/{id}/{url_title}'                  => '_member',
 

@@ -197,335 +197,69 @@ class Index extends Controller_Module
 		return $this->form()->display();
 	}
 
-	public function _auth($authenticator)
+	public function auth($authenticator)
 	{
-		try
-		{
-			spl_autoload_register(function($name){
-				if (preg_match('/^SocialConnect/', $name))
-				{
-					require_once 'lib/'.str_replace('\\', '/', $name).'.php';
-				}
-			});
+		spl_autoload_register(function($name){
+			if (preg_match('/^SocialConnect/', $name))
+			{
+				require_once 'lib/'.str_replace('\\', '/', $name).'.php';
+			}
+		});
 
-			$service = new \SocialConnect\Auth\Service(
-				new \SocialConnect\Common\Http\Client\Curl(),
-				new \SocialConnect\Provider\Session\NeoFrag($this->session), [
-					'redirectUri' => $this->url->host.url('user/auth'),
-					'provider'    => [
-						$name = str_replace('_', '-', $authenticator->name) => $authenticator->config()
-					]
+		$service = new \SocialConnect\Auth\Service(
+			new \SocialConnect\Common\Http\Client\Curl,
+			new \SocialConnect\Provider\Session\NeoFrag($this->session), [
+				'redirectUri' => $authenticator->static_url(),
+				'provider'    => [
+					$name = str_replace('_', '-', $authenticator->info()->name) => $authenticator->config()
 				]
-			);
-
-			$provider = $service->getProvider($name);
-
-			if ($callback = $authenticator->data($params))
-			{
-				$data = $callback($provider->getIdentity($provider->getAccessTokenByRequestParameters($params)));
-
-				if (!($user_id = $this->db->select('user_id')->from('nf_users_auth')->where('authenticator', $authenticator->name)->where('id', $data['id'])->row()))
-				{
-					if ($data['avatar'])
-					{
-						$this	->network($data['avatar'])
-								->stream($file = NeoFrag()->model2('file')->static_filename('members', 'tmp'));
-
-						$name = pathinfo($data['avatar'], PATHINFO_BASENAME);
-
-						$data['avatar'] = 0;
-
-						if (file_exists($file))
-						{
-							if ((list($w, $h, $type) = getimagesize($file)) && $w == $h && $w >= 250 && in_array($type, array_keys($extensions = [IMAGETYPE_GIF => 'gif', IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png'])))
-							{
-								rename($file, $file = str_replace('.tmp', '.'.$extensions[$type], $file));
-								image_resize($file, 250, 250);
-								$data['avatar'] = NeoFrag()->model2('file')->static_add($file, $name);
-							}
-							else
-							{
-								unlink($file);
-							}
-						}
-					}
-					else
-					{
-						$data['avatar'] = 0;
-					}
-
-					while ($data['username'] && $this->db->select('1')->from('nf_user')->where('username', $data['username'])->row())
-					{
-						$data['username'] = 'guest'.time();
-					}
-
-					if ($data['language'] && !$this->db->select('1')->from('nf_settings_languages')->where('code', $data['language'])->row())
-					{
-						$data['language'] = '';
-					}
-
-					if ($data['email'] && (!is_valid_email($data['email']) || $this->db->select('1')->from('nf_user')->where('email', $data['email'])->row()))
-					{
-						$data['email'] = '';
-					}
-
-					if ($data['website'] && !is_valid_url($data['website']))
-					{
-						$data['website'] = '';
-					}
-
-					$user_id = $this->db->insert('nf_user', [
-						'username' => utf8_htmlentities($data['username']) ?: NULL,
-						'password' => '',
-						'salt'     => '',
-						'email'    => $data['email']    ?: NULL,
-						'language' => $data['language'] ?: NULL
-					]);
-
-					$this->db->insert('nf_users_auth', [
-						'user_id'       => $user_id,
-						'authenticator' => $authenticator->name,
-						'id'            => $data['id']
-					]);
-
-					if (!in_array($data['sex'], ['female', 'male']))
-					{
-						$data['sex'] = NULL;
-					}
-
-					if ($data['first_name'] || $data['last_name'] || $data['avatar'] || $data['signature'] || $data['date_of_birth'] || $data['sex'] ||  $data['location'] ||  $data['website'])
-					{
-						$this->db->insert('nf_user_profile', [
-							'user_id'       => $user_id,
-							'first_name'    => utf8_htmlentities($data['first_name']) ?: '',
-							'last_name'     => utf8_htmlentities($data['last_name'])  ?: '',
-							'avatar'        => $data['avatar']                        ?: NULL,
-							'signature'     => utf8_htmlentities($data['signature'])  ?: '',
-							'date_of_birth' => $data['date_of_birth']                 ?: NULL,
-							'sex'           => $data['sex'],
-							'location'      => utf8_htmlentities($data['location'])   ?: '',
-							'website'       => $data['website']                       ?: ''
-						]);
-					}
-				}
-
-				$this->session->set('session', 'authenticator', $authenticator->name);
-				$this->user->login($user_id, TRUE);
-			}
-			else
-			{
-				header('Location: '.$provider->makeAuthUrl());
-				exit;
-			}
-		}
-		catch (Exception $e)
-		{
-			trigger_error($e->getMessage(), E_USER_WARNING);
-		}
-
-		redirect('user');
-	}
-
-	public function login($error = 0)
-	{
-		$this->title($this->lang('Connexion'));
-
-		$form_login = $this	->form()
-							->set_id('6e0fbe194d97aa8c83e9f9e6b5d07c66')
-							->add_rules([
-								'login' => [
-									'label'       => $this->lang('Identifiant'),
-									'description' => $this->lang('Vous pouvez vous identifier avec votre adresse mail ou bien votre pseudonyme'),
-									'type'        => 'text',
-									'rules'       => 'required|max(50)'
-								],
-								'password' => [
-									'label' => $this->lang('Mot de passe'),
-									'type'  => 'password'
-								],
-								'remember_me' => [
-									'type'   => 'checkbox',
-									'values' => ['on' => $this->lang('Se souvenir de moi')]
-								],
-								'redirect' => [
-								]
-							])
-							->add_submit($this->lang('Connexion'))
-							->display_required(FALSE)
-							->save();
-
-		$rules = [
-			'username' => [
-				'label' => $this->lang('Identifiant'),
-				'icon'  => 'fa-user',
-				'rules' => 'required',
-				'check' => function($value){
-					if (NeoFrag()->db->select('1')->from('nf_user')->where('username', $value)->row())
-					{
-						return $this->lang('Identifiant déjà utilisé');
-					}
-				}
-			],
-			'password' => [
-				'label' => $this->lang('Mot de passe'),
-				'icon'  => 'fa-lock',
-				'type'  => 'password',
-				'rules' => 'required'
-			],
-			'password_confirm' => [
-				'label' => $this->lang('Confirmation'),
-				'icon'  => 'fa-lock',
-				'type'  => 'password',
-				'rules' => 'required',
-				'check' => function($value, $post){
-					if ($post['password'] != $value)
-					{
-						return $this->lang('Les mots de passe doivent être identiques');
-					}
-				}
-			],
-			'email' => [
-				'label' => $this->lang('Email'),
-				'type'  => 'email',
-				'rules' => 'required',
-				'check' => function($value){
-					if (NeoFrag()->db->select('1')->from('nf_user')->where('email', $value)->row())
-					{
-						return $this->lang('Addresse email déjà utilisée');
-					}
-				}
 			]
-		];
-
-		if (!empty($this->config->nf_registration_charte))
-		{
-			$rules['registration_charte'] = [
-				'type'   => 'checkbox',
-				'values' => ['on' => 'En vous inscrivant, vous reconnaissez avoir pris connaissance de <a href="#modalCharte" role="dialog" data-toggle="modal" data-target="#modalCharte"">notre règlement</a> et de l\'accepter.'],
-				'rules'  => 'required'
-			];
-		}
-
-		$form_registration = $this
-			->form()
-			->add_rules($rules)
-			->add_captcha()
-			->add_submit($this->lang('Créer un compte'))
-			->fast_mode()
-			->save();
-
-		$rows = [];
-
-		//TODO 0.1.7
-		if (in_array($error, []))// [NeoFrag::UNCONNECTED, NeoFrag::UNAUTHORIZED]))
-		{
-			header('HTTP/1.0 401 Unauthorized');
-
-			$rows[] = $this->row(
-				$this->col(
-					$this	->panel()
-							->heading($this->lang('Connexion requise'), 'fa-warning')
-							->body($this->lang('<p>La page que vous souhaitez consulter n\'est accessible qu\'aux utilisateurs connectés.</p>Connectez-vous si vous avez déjà un compte utilisateur.<br />Vous pouvez aussi créer un nouveau compte en vous inscrivant ci-dessous.'))
-							->color('danger')
-				)
-			);
-		}
-
-		if ($form_login->is_valid($post))
-		{
-			$login       = $post['login'];
-			$password    = $post['password'];
-			$remember_me = in_array('on', $post['remember_me']);
-
-			$user_id = $this->model()->check_login($login, $hash, $salt);
-
-			if ($user_id == -1)
-			{
-				//TODO
-				//$form_login->alert('Compte utilisateur inactif !', 'Ce compte n\'a pas encore été activé par mail. Si vous n\'avez pas reçu de mail d\'activation vous pouvez utiliser la fonction <a href="'.url('user/activate').'" onclick="$(\'#form_activate\').submit(); return false;">Activation de compte</a>.', 'error');
-			}
-			else if ($user_id > 0 && $this->password->is_valid($password.$salt, $hash, (bool)$salt))
-			{
-				if (!$salt)
-				{
-					$this->db	->where('id', $user_id)
-								->update('nf_user', [
-									'password' => $this->password->encrypt($password.($salt = unique_id())),
-									'salt'     => $salt
-								]);
-				}
-
-				$this->user->login($user_id, $remember_me);
-
-				if ($post['redirect'])
-				{
-					redirect($post['redirect']);
-				}
-				else
-				{
-					refresh();
-				}
-			}
-			else
-			{
-				$rows[] = $this->row(
-					$this->col(
-						$this	->panel()
-								->heading($this->lang('Identifiants incorrects !'), 'fa-warning')
-								->body($this->lang('Si vous avez oublié votre mot de passe, utilisez la fonction <a href="'.url('user/lost-password').'">Mot de passe oublié</a>, sinon vous pouvez créer un compte ci-dessous'))
-								->color('danger')
-					)
-				);
-			}
-		}
-		else if ($form_registration->is_valid($post) && $this->config->nf_registration_status == 0)
-		{
-			$user_id = $this->db->insert('nf_user', [
-				'username' => $post['username'],
-				'password' => $this->password->encrypt($post['password'].($salt = unique_id())),
-				'salt'     => $salt,
-				'email'    => $post['email']
-			]);
-
-			if ($this->config->nf_welcome && $this->config->nf_welcome_user_id && $this->config->nf_welcome_title && $this->config->nf_welcome_content)
-			{
-				$this->model('messages')->insert_message($post['username'], $this->config->nf_welcome_title, str_replace('[pseudo]', '@'.$post['username'], $this->config->nf_welcome_content), TRUE);
-			}
-
-			$this->user->login($user_id);
-
-			refresh();
-		}
-
-		$rows[] = $this->row(
-			$col = $this->col(
-						$this	->panel()
-								->heading($this->lang('Se connecter'), 'fa-sign-in')
-								->body($this->view('login', [
-									'form_id' => $form_login->token()
-								]))
-					)
-					->size('col-md-6'),
-			$this	->col(
-						$this	->panel()
-								->heading($this->lang('Pas encore inscrit ?'), 'fa-sign-in fa-rotate-90')
-								->body($this->config->nf_registration_status == 0 ? $this->lang('<p>Créez votre compte maintenant pour profiter pleinement du site</p>').$form_registration->display().($this->config->nf_registration_charte ? $this->view('charte') : '') : '<div class="alert alert-warning no-margin">Les inscriptions sur notre site sont fermées...</div>')
-					)
-					->size('col-md-6')
 		);
 
-		if ($authenticators = NeoFrag()->model2('addon')->get('authenticator'))
-		{
-			$this->css('auth');
+		$provider = $service->getProvider($name);
 
-			$col->prepend(
-				$this	->panel()
-						->heading('Connexion rapide', 'fa-user-circle')
-						->body('<div class="text-center">'.implode($authenticators).'</div>')
-			);
+		if ($callback = $authenticator->data($params))
+		{
+			$data = $callback($provider->getIdentity($provider->getAccessTokenByRequestParameters($params)));
+
+			if (($auth = $this->collection('auth')->where('authenticator', $authenticator->__addon->id)->where('key', $data['id'])->row()) && $auth->key == $data['id'])
+			{
+				if ($this->user->id != $auth->user->id)
+				{
+					$auth	->set_if($data['username'], 'username', $data['username'])
+							->set_if($data['avatar'],   'avatar',   $data['avatar'])
+							->update();
+
+					$this->session->login($auth->user);
+				}
+			}
+			else if ($this->user())
+			{
+				$auth	->set('user',          $this->user)
+						->set('authenticator', $authenticator->__addon)
+						->set('key',           $data['id'])
+						->set_if($data['username'], 'username', $data['username'])
+						->set_if($data['avatar'],   'avatar',   $data['avatar'])
+						->create();
+
+				notify($this->lang('Connexion établie via %s', $authenticator->info()->title));
+			}
+			else
+			{
+				$this->session->append('auth', 'providers', $authenticator->__addon->id.'-'.$data['id'], [$authenticator->__addon->id, $data]);
+
+				notify($this->lang('Compte %s inconnu', $authenticator->info()->title), 'danger');
+			}
+
+			redirect();
 		}
 
-		return $rows;
+		$this->url->redirect($provider->makeAuthUrl());
+	}
+
+	public function _auth()
+	{
+		return 'auth';
 	}
 
 	public function lost_password($token)
