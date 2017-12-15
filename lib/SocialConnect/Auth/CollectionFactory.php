@@ -45,6 +45,7 @@ class CollectionFactory implements FactoryInterface
         'odnoklassniki' => 'SocialConnect\OAuth2\Provider\Odnoklassniki',
         'linkedin'      => 'SocialConnect\OAuth2\Provider\LinkedIn',
         'battle-net'    => 'SocialConnect\OAuth2\Provider\BattleNet',
+        'discord'       => 'SocialConnect\OAuth2\Provider\Discord',
         // OpenID
         'steam'         => 'SocialConnect\OpenID\Provider\Steam',
     ];
