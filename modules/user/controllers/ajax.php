@@ -10,30 +10,46 @@ use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
 class Ajax extends Controller_Module
 {
-	public function _member($user_id, $username)
+	public function _member($user)
 	{
 		return $user->view('user/profile');
 	}
 
 	public function auth()
 	{
-		return $this->modal('Connexion rapide', 'fa-user-circle')
-					->body($this->view('authenticators'))
-					->button($this	->button()
-									->title('Mot de passe oublié ?')
-									->color('default')
-									->modal_ajax('ajax/user/lost-password')
-					)
-					->button($this	->button()
-									->title('Créer un compte')
-									->color('secondary')
-									->modal_ajax('ajax/user/register')
-					)
-					->button($this	->button()
-									->title('Se connecter')
-									->color('primary')
-									->modal_ajax('ajax/user/login')
-					);
+		$authenticators = NeoFrag()	->model2('addon')
+									->get('authenticator')
+									->filter('is_setup')
+									->sort(function($a, $b){
+										return $a->settings()->order - $b->settings()->order;
+									});
+
+		if (!$authenticators->empty())
+		{
+			return $this->modal('Connexion rapide', 'fa-user-circle')
+						->body($this->view('authenticators', [
+							'authenticators' => $authenticators
+						]))
+						->button($this	->button()
+										->title('Mot de passe oublié ?')
+										->color('link')
+										->modal_ajax('ajax/user/lost-password')
+						)
+						->button($this	->button()
+										->title('Créer un compte')
+										->color('secondary')
+										->modal_ajax('ajax/user/register')
+						)
+						->button($this	->button()
+										->title('Se connecter')
+										->color('primary')
+										->modal_ajax('ajax/user/login')
+						);
+		}
+		else
+		{
+			return $this->login();
+		}
 	}
 
 	public function login()
@@ -54,21 +70,15 @@ class Ajax extends Controller_Module
 									'on' => 'Se souvenir de moi'
 								])
 					)
-					->success(function($data, $form){
+					->success(function($data){
 						$user = $this->db	->collection('user')
 											->where('deleted', FALSE)
 											->where('username', $data['login'], 'OR', 'email', $data['login'])
 											->row();
-						//TODO admin123
-						if ($user() && $this->password->is_valid($data['password'].$user->salt, $user->password, $salt = $user->salt !== ''))
-						{
-							if (!$salt)
-							{
-								$user	->set('password', $this->password->encrypt($data['password'].($salt = unique_id())))
-										->set('salt', $salt)
-										->update();
-							}
 
+						//TODO admin123
+						if ($user() && $user->password($data['password']))
+						{
 							if ($this->config->nf_registration_validation && !$user->last_activity_date)
 							{
 								//Vous devez valider votre inscription, recevoir un nouveau mail de validation
@@ -95,7 +105,7 @@ class Ajax extends Controller_Module
 					)
 					->button_prepend($this	->button()
 											->title('Mot de passe oublié ?')
-											->color('default')
+											->color('link')
 											->modal_ajax('ajax/user/lost-password')
 					);
 	}
@@ -115,6 +125,12 @@ class Ajax extends Controller_Module
 					->rule($this->form_password('password_confirm')
 								->title('Confirmation du mot de passe')
 								->required()
+								->check(function($data){
+									if ($data['password'] && $data['password'] !== $data['password_confirm'])
+									{
+										return 'Les mots de passe de correspondent pas';
+									}
+								})
 					)
 					->rule($this->form_email('email')
 								->title('Adresse email')
@@ -122,7 +138,7 @@ class Ajax extends Controller_Module
 					)
 					->captcha()
 					->success(function($data, $form){
-						$user = $this	->model2('user')
+						$user = NeoFrag()->model2('user')
 										->set('username', $data['username'])
 										->set('password', $data['password'])
 										->set('email',    $data['email'])
@@ -213,6 +229,12 @@ class Ajax extends Controller_Module
 					->rule($this->form_password('password_confirm')
 								->title('Confirmation du mot de passe')
 								->required()
+								->check(function($data){
+									if ($data['password'] && $data['password'] !== $data['password_confirm'])
+									{
+										return 'Les mots de passe de correspondent pas';
+									}
+								})
 					)
 					->success(function($data) use ($token){
 						$token	->delete()

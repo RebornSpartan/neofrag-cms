@@ -1,4 +1,4 @@
-<div class="media user-profile">
+<div class="user-profile">
 	<?php echo $user->avatar() ?>
 	<h2><?php echo $user->username ?></h2>
 	<?php echo $this->array

@@ -10,174 +10,140 @@ use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
 class Index extends Controller_Module
 {
-	public function edit()
+	public function index()
 	{
-		$this	->title($this->lang('Gérer mon compte'))
-				->icon('fa-cogs')
-				->breadcrumb();
+		return $this->title('Mon activité')
+					->icon('fa-star-o')
+					->array([
+						$this->row($this->col($this->panel()->body($this->_panel_infos()))),
+						$this	->row()
+								->append($this->col($this	->panel()
+															->heading('Mon profil')
+															->body($this->user->view('user/profile'))
+															->size('col-md-5')
+								))
+								->append($this	->col()
+												->size('col-md-7')
+												->append($this	->panel()
+																->heading('Messagerie')
+																->body($this->view('index'))
+												)
+												->append($this->_panel_activities())
+								)
+					]);
+	}
 
-		$this->form()
-			->add_rules('user', [
-				'username'      => $this->user->username,
-				'email'         => $this->user->email,
-				'first_name'    => $this->user->profile()->first_name,
-				'last_name'     => $this->user->profile()->last_name,
-				'avatar'        => $this->user->profile()->avatar->id,
-				'signature'     => $this->user->profile()->signature,
-				'date_of_birth' => $this->user->profile()->date_of_birth,
-				'sex'           => $this->user->profile()->sex,
-				'location'      => $this->user->profile()->location,
-				'website'       => $this->user->profile()->website,
-				'quote'         => $this->user->profile()->quote
-			])
-			->add_submit($this->lang('Valider'))
-			->add_back('user');
+	public function account($sessions)
+	{
+		return $this->title('Connexion')
+					->icon('fa-sign-in')
+					->breadcrumb()
+					->array
+					->append($this	->row()
+									->append(
+										$this	->col()
+												->size('col-6')
+												->append(
+													$this	->form2('username current_password new_password email', $this->user)
+															->success(function($data){
 
-		if ($this->form()->is_valid($post))
-		{
-			$this->model()->edit_user(	$post['username'],
-										$post['email'],
-										$post['first_name'],
-										$post['last_name'],
-										$post['avatar'],
-										$post['date_of_birth'],
-										$post['sex'],
-										$post['location'],
-										$post['website'],
-										$post['quote'],
-										$post['signature']);
+															})
+															->submit('Modifier')
+															->panel()
+															->title('Info de connexion')
+												)
+									)
+									->append(
+										$this	->col()
+												->size('col-6')
+												->append(
+													$this	->form2()
+															->rule($this->form_checkbox('delete')
+																		->data([
+																			'account'   => 'Je souhaite supprimer mon compte',
+																			//'keep_data' => 'J\'accepte que mes contributions soient conservées de façon anonyme'
+																		])
+															)
+															->form('current_password')
+															->success(function($data){
+																if (in_array('account', $data['delete']))
+																{
+																	//TODO
+																	if (1 || in_array('keep_data', $data['delete']))
+																	{
+																		$this->user->set('deleted', TRUE)->update();
+																	}
+																	else
+																	{
+																		$this->user->delete();
+																	}
 
-			if ($post['password_new'] && $post['password_new'] != $post['password_old'])
-			{
-				$this->model()->update_password($post['password_new']);
+																	NeoFrag()->collection('session')->where('user_id', $this->user->id)->update([
+																		'user_id' => NULL
+																	]);
 
-				$this->db	->where('user_id', $this->user->id)
-							->where('id <>', $this->session->id)
-							->delete('nf_session');
-			}
+																	notify('Compte supprimé');
 
-			redirect_back('user/'.$this->user->id.'/'.url_title($this->user->username));
-		}
-
-		return $this->row(
-			$this->col(
-				$this->_panel_profile(),
-				$this->panel()->body($this->view('menu'), FALSE)
-			),
-			$this->col(
-				$this	->panel()
-						->heading()
-						->body($this->form()->display())
-						->size('col-md-8 col-lg-9')
+																	redirect();
+																}
+															})
+															->submit('Supprimer', 'danger')
+															->panel()
+															->title('Supprimer mon compte', 'fa-times')
+												)
+									)
 					)
-		);
+					->append($this	->table2($sessions)
+									->col(function($session){
+										return user_agent($session->data->session->user_agent);
+									})
+									->col('Adresse IP', function($session){
+										return geolocalisation($ip_address = $session->data->session->ip_address).'<span data-toggle="tooltip" data-original-title="'.$session->data->session->host_name.'">'.$ip_address.'</span>';
+									})
+									->col('Site référent', function($session){
+										return $session->data->session->referer ? urltolink($session->data->session->referer) : $this->lang('Aucun');
+									})
+									->col('Date', function($session){
+										return $session->data->session->date;
+									})
+									->col('Compte tiers', function($session){
+										return $session->auth ? $session->auth : '';
+									})
+									->delete()
+									->panel()
+									->title('Sessions actives', 'fa-globe')
+					);
+	}
+
+	public function profile()
+	{
+		return $this->title('Profil')
+					->icon('fa-pencil')
+					->breadcrumb()
+					->form2('profile', $this->user->profile())
+					->panel();
 	}
 
 	public function sessions($sessions)
 	{
-		$this	->title('Gérer mes sessions')
-				->icon('fa-globe')
-				->breadcrumb();
-
-		$active_sessions = $this->table()
-			->add_columns([
-				[
-					'content' => function($data){
-						return $data['remember_me'] ? '<i class="fa fa-toggle-on text-green" data-toggle="tooltip" title="'.$this->lang('Connexion persistante').'"></i>' : '<i class="fa fa-toggle-off text-grey" data-toggle="tooltip" title="'.$this->lang('Connexion non persistante').'"></i>';
-					},
-					'size'    => TRUE,
-					'align'   => 'center'
-				],
-				[
-					'content' => function($data){
-						return user_agent($data['user_agent']);
-					},
-					'size'    => TRUE,
-					'align'   => 'center'
-				],
-				[
-					'title'   => $this->lang('Adresse IP'),
-					'content' => function($data){
-						return geolocalisation($data['ip_address']).'<span data-toggle="tooltip" data-original-title="'.$data['host_name'].'">'.$data['ip_address'].'</span>';
-					}
-				],
-				[
-					'title'   => $this->lang('Site référent'),
-					'content' => function($data){
-						return $data['referer'] ? urltolink($data['referer']) : $this->lang('Aucun');
-					}
-				],
-				[
-					'title'   => $this->lang('Date d\'arrivée'),
-					'content' => function($data){
-						return '<span data-toggle="tooltip" title="'.timetostr(NeoFrag()->lang('%A %e %B %Y, %H:%M'), $data['date']).'">'.time_span($data['date']).'</span>';
-					}
-				],
-				[
-					'title'   => $this->lang('Dernière activité'),
-					'content' => function($data){
-						return '<span data-toggle="tooltip" title="'.timetostr(NeoFrag()->lang('%A %e %B %Y, %H:%M'), $data['last_activity']).'">'.time_span($data['last_activity']).'</span>';
-					}
-				],
-				[
-					'content' => [function($data){
-						if ($data['session_id'] != NeoFrag()->session->id)
-						{
-							return $this->button_delete('user/sessions/delete/'.$data['session_id']);
-						}
-					}]
-				]
-			])
-			->pagination(FALSE)
-			->data($this->user->get_sessions())
-			->save();
-
-		$sessions_history = $this->table()
-			->add_columns([
-				[
-					'content' => function($data){
-						return user_agent($data['user_agent']);
-					},
-					'size'    => TRUE,
-					'align'   => 'center'
-				],
-				[
-					'title'   => $this->lang('Adresse IP'),
-					'content' => function($data){
-						return geolocalisation($data['ip_address']).'<span data-toggle="tooltip" data-original-title="'.$data['host_name'].'">'.$data['ip_address'].'</span>';
-					}
-				],
-				[
-					'title'   => $this->lang('Site référent'),
-					'content' => function($data){
-						return $data['referer'] ? urltolink($data['referer']) : $this->lang('Aucun');
-					}
-				],
-				[
-					'title'   => $this->lang('Date d\'arrivée'),
-					'content' => function($data){
-						return '<span data-toggle="tooltip" title="'.timetostr(NeoFrag()->lang('%A %e %B %Y, %H:%M'), $data['date']).'">'.time_span($data['date']).'</span>';
-					}
-				]
-			])
-			->data($sessions)
-			->no_data($this->lang('Aucun historique disponible'));
-
-		return $this->row(
-			$this->col(
-				$this->_panel_profile(),
-				$this->panel()->body($this->view('menu'), FALSE)
-			),
-			$this->col(
-				$this	->panel()
-						->heading($this->lang('Mes sessions actives'), 'fa-shield')
-						->body($active_sessions->display())
-						->size('col-md-8 col-lg-9'),
-				$this	->panel()
-						->heading($this->lang('Historique de mes sessions'), 'fa-power-off')
-						->body($sessions_history->display())
-			)
-		);
+		return $this->title('Historique des sessions')
+					->icon('fa-history')
+					->breadcrumb()
+					->table2($sessions, 'Aucun historique')
+					->col(function($a){
+						return user_agent($a->user_agent);
+					})
+					->col('Adresse IP', function($a){
+						return geolocalisation($ip_address = $a->ip_address).'<span data-toggle="tooltip" data-original-title="'.$a->host_name.'">'.$ip_address.'</span>';
+					})
+					->col('Site référent', function($a){
+						return $a->referer ? urltolink($a->referer) : $this->lang('Aucun');
+					})
+					->col('Date', 'date')
+					->col('Compte tiers', function($a){
+						return $a->auth ? $a->auth : '';
+					})
+					->panel();
 	}
 
 	public function _session_delete($session_id)
@@ -257,7 +223,7 @@ class Index extends Controller_Module
 		$this->url->redirect($provider->makeAuthUrl());
 	}
 
-	public function _auth()
+	public function _auth($auths)
 	{
 		return 'auth';
 	}
@@ -278,20 +244,14 @@ class Index extends Controller_Module
 	{
 		$this->breadcrumb();
 
-		return $this->row(
-			$this->col(
-				$this->_panel_messages()
-			),
-			$this->col(
-				$this	->panel()
-						->heading()
-						->body(!$messages ? '<h4 class="text-center">Aucun message</h4>' : $this->view('messages/inbox', [
-							'messages'     => $messages,
-							'allow_delete' => $allow_delete
-						]), FALSE)
-						->size('col-md-8 col-lg-9'),
-				$this->module->pagination->panel()
-			)
+		return $this->col(
+			$this	->panel()
+					->heading()
+					->body(!$messages ? '<h4 class="text-center">Aucun message</h4>' : $this->view('messages/inbox', [
+						'messages'     => $messages,
+						'allow_delete' => $allow_delete
+					]), FALSE),
+			$this->module->pagination->panel()
 		);
 	}
 
@@ -335,21 +295,15 @@ class Index extends Controller_Module
 			redirect('user/messages/'.$message_id.'/'.url_title($title));
 		}
 
-		return $this->row(
-			$this->col(
-				$this->_panel_messages()
-			),
-			$this->col(
-				$this	->panel()
-						->heading($title, 'fa-envelope-o')
-						->body($this->view('messages/replies', [
-							'replies' => $replies
-						]))
-						->size('col-md-8 col-lg-9'),
-				$this	->panel()
-						->heading('Répondre', 'fa-reply')
-						->body($this->form()->display())
-			)
+		return $this->col(
+			$this	->panel()
+					->heading($title, 'fa-envelope-o')
+					->body($this->view('messages/replies', [
+						'replies' => $replies
+					])),
+			$this	->panel()
+					->heading('Répondre', 'fa-reply')
+					->body($this->form()->display())
 		);
 	}
 
@@ -388,17 +342,9 @@ class Index extends Controller_Module
 			}
 		}
 
-		return $this->row(
-			$this->col(
-				$this->_panel_messages()
-			),
-			$this->col(
-				$this	->panel()
-						->heading()
-						->body($this->form()->display())
-						->size('col-md-8 col-lg-9')
-			)
-		);
+		return $this->panel()
+					->heading()
+					->body($this->form()->display());
 	}
 
 	public function _messages_delete($message_id, $title)
@@ -423,16 +369,42 @@ class Index extends Controller_Module
 		return $this->form()->display();
 	}
 
-	public function _member($user_id, $username)
+	public function _member($user)
 	{
-		$this->title($username);
+		$this->output->data->set('pre_module', $this->array
+													->append($user->view('user/cover'))
+													->append('	<div class="user-info">
+																	<div class="container">
+																		'.$this->row($this->col($this->_panel_infos($user))->size('col-8 offset-4')).'
+																	</div>
+																</div>')
+		);
 
-		return $this->array
-					->append($this	->panel()
-									->heading($username, 'fa-user')
-									->body($this->view('profile_public', $this->model()->get_user_profile($user_id)))
+		return $this->title($user->username)
+					->breadcrumb('Profil')
+					->breadcrumb($user->username)
+					->row()
+					->append($this	->col()
+									->size('col-4 user-col')
+									->append($this	->panel()
+													->body($user->view('user/profile'))
+									)
+									->append_if(in_array('donate-0', $this->groups($user->id)), function(){
+										return $this->panel()
+													->style('honor')
+													->body('<h4>'.icon('fa-usd text-success').' Donateur</h4>');
+									})
+									->append_if(in_array('shop2-0', $this->groups($user->id)), function(){
+										return $this->panel()
+													->style('honor')
+													->body('<h4>'.icon('fa-cubes text-warning').' Contributeur</h4>');
+									})
 					)
-					->append($this->panel_back($this->module('members') ? 'members' : ''));
+					->append($this	->col()
+									->size('col-8')
+									->append($this->_panel_activities())
+									->append($this->panel_back())
+					);
 	}
 
 	public function _panel_profile(&$user_profile = NULL)
@@ -445,36 +417,19 @@ class Index extends Controller_Module
 					->size('col-md-4 col-lg-3');
 	}
 
-	public function _panel_infos($user_id = NULL)
+	public function _panel_infos($user = NULL)
 	{
-		if ($user_id === NULL)
-		{
-			$user_id = $this->user->id;
-
-			$infos = [
-				'registration_date'  => $this->user->registration_date,
-				'last_activity_date' => $this->user->last_activity_date
-			];
-		}
-		else
-		{
-			$infos = $this->db	->select('registration_date', 'last_activity_date')
-								->from('nf_user')
-								->where('id', $user_id)
-								->where('deleted', FALSE)
-								->row();
-		}
-
-		$infos['groups'] = $this->groups->user_groups($user_id);
-
-		return $this->panel()
-					->body($this->view('infos', $infos))
-					->size('col-md-8 col-lg-9');
+		return $this->view('infos', [
+			'user' => $user ?: $this->user
+		]);
 	}
 
 	public function _panel_activities($user_id = NULL)
 	{
-		$this->css('activities');
+		$this	->css('activities')
+				->js('user')
+				->css('jquery.mCustomScrollbar.min')
+				->js('jquery.mCustomScrollbar.min');
 
 		if ($user_id === NULL)
 		{
@@ -509,14 +464,5 @@ class Index extends Controller_Module
 					->body($this->view('activity', [
 						'user_activity' => $user_activity
 					]));
-	}
-
-	private function _panel_messages()
-	{
-		return $this->panel()
-					->heading('Messagerie privée', 'fa-envelope-o')
-					->body($this->view('messages/menu'), FALSE)
-					->footer('<a href="'.url('user').'">'.icon('fa-arrow-circle-o-left').' Retour sur mon espace</a>', 'left')
-					->size('col-md-4 col-lg-3');
 	}
 }

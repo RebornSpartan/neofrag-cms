@@ -29,7 +29,7 @@ class User extends Model2
 
 	public function profile()
 	{
-		return $this->model2('user_profile', $this->id);
+		return NeoFrag()->model2('user_profile', $this->id);
 	}
 
 	public function is_online()

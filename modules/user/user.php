@@ -13,7 +13,7 @@ class User extends Module
 	protected function __info()
 	{
 		return [
-			'title'       => $this->lang('Espace membre'),
+			'title'       => 'Utilisateur',
 			'description' => '',
 			'icon'        => 'fa-user',
 			'link'        => 'https://neofr.ag',
@@ -22,8 +22,9 @@ class User extends Module
 			'admin'       => FALSE,
 			'routes'      => [
 				//Index
+				'account{pages}'                         => 'account',
 				'sessions{pages}'                        => 'sessions',
-				'auth'                                   => '_auth',
+				'auth{pages}'                            => '_auth',
 				'sessions/delete/{key_id}'               => '_session_delete',
 				'messages{pages}'                        => '_messages_inbox',
 				'messages/sent{pages}'                   => '_messages_sent',
