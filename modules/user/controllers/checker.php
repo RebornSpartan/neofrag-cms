@@ -10,7 +10,14 @@ use NF\NeoFrag\Loadables\Controllers\Module_Checker;
 
 class Checker extends Module_Checker
 {
-	public function edit()
+	public function account($page = '')
+	{
+		$this->error->unconnected();
+
+		return [NeoFrag()->collection('session')->where('_.user_id', $this->user->id)->order_by('_.last_activity DESC')->paginate($page)];
+	}
+
+	public function profile()
 	{
 		if (!$this->user->id)
 		{
@@ -62,11 +69,11 @@ class Checker extends Module_Checker
 		}
 	}
 
-	public function _auth()
+	public function _auth($page = '')
 	{
-		$this->error_if($this->user());
+		$this->error->unconnected();
 
-		return [];
+		return [$this->collection('auth')->where('_.user_id', $this->user->id)->order_by('_.id')->paginate($page)];
 	}
 
 	public function logout()
