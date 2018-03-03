@@ -1,0 +1,3 @@
+[submodule "themes/dungeon"]
+	path = themes/dungeon
+	url = git@github.com:NeoFragCMS/neofrag-theme-dungeon.git
