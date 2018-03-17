@@ -12,7 +12,7 @@ class Ajax extends Controller_Module
 {
 	public function _member($user_id, $username)
 	{
-		return $this->view('profile_mini', $this->model()->get_user_profile($user_id));
+		return $user->view('user/profile');
 	}
 
 	public function auth()
