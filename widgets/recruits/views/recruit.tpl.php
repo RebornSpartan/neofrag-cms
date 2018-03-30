@@ -1,5 +1,9 @@
 <?php if ($image_id): ?>
+<<<<<<< HEAD
 <img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" />
+=======
+<img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" />
+>>>>>>> upstream/dev
 <?php endif ?>
 <div class="panel-body">
 	<p><big><?php echo icon($icon) ?> <a href="<?php echo url('recruits/'.$recruit_id.'/'.url_title($title)) ?>"><?php echo $title ?></a></big></p>

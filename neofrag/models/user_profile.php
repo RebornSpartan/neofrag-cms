@@ -18,7 +18,11 @@ class User_Profile extends Model2
 			'last_name'     => self::field()->text(100),
 			'avatar'        => self::field()->file(),
 			'signature'     => self::field()->text(),
+<<<<<<< HEAD
 			'date_of_birth' => self::field()->datetime()->null(),
+=======
+			'date_of_birth' => self::field()->date()->null(),
+>>>>>>> upstream/dev
 			'sex'           => self::field()->enum('female', 'male')->null(),
 			'location'      => self::field()->text(100),
 			'quote'         => self::field()->text(100),

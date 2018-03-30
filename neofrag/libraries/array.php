@@ -153,7 +153,11 @@ class Array_ extends Library implements \Iterator
 		return $this->_extends ?: $this;
 	}
 
+<<<<<<< HEAD
 	public function filter($callback)
+=======
+	public function filter($callback = NULL)
+>>>>>>> upstream/dev
 	{
 		if (is_string($callback))
 		{
@@ -161,10 +165,21 @@ class Array_ extends Library implements \Iterator
 				return method_exists($a, $callback) ? $a->$callback() : $callback($a);
 			});
 		}
+<<<<<<< HEAD
 		else
 		{
 			$this->_array = array_filter($this->_array, $callback);
 		}
+=======
+		else if ($callback)
+		{
+			$this->_array = array_filter($this->_array, $callback);
+		}
+		else
+		{
+			$this->_array = array_filter($this->_array);
+		}
+>>>>>>> upstream/dev
 
 		return $this->_extends ?: $this;
 	}
@@ -198,10 +213,24 @@ class Array_ extends Library implements \Iterator
 		return ['_array'];
 	}
 
+<<<<<<< HEAD
 	public function __extends($extends)
 	{
 		$this->_extends = $extends;
 		return $this;
+=======
+	public function __extends($extends = NULL)
+	{
+		if ($extends)
+		{
+			$this->_extends = $extends;
+			return $this;
+		}
+		else
+		{
+			return $this->_extends ?: $this;
+		}
+>>>>>>> upstream/dev
 	}
 
 	protected function _browse()

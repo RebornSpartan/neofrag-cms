@@ -58,7 +58,11 @@ class User extends Model2
 
 	public function groups()
 	{
+<<<<<<< HEAD
 		return parent::groups($this->id);
+=======
+		return $this->groups->user_groups($this->id);
+>>>>>>> upstream/dev
 	}
 
 	public function link($user_id = 0, $username = '', $prefix = '')
@@ -79,7 +83,13 @@ class User extends Model2
 			return '';
 		}
 
+<<<<<<< HEAD
 		return '<a class="user-profile" data-user-id="'.$user_id.'" data-username="'.url_title($username).'" href="'.url('user/'.$user_id.'/'.url_title($username)).'">'.$prefix.$username.'</a>';
+=======
+		$this->js('user-badge');
+
+		return '<a class="user-badge" data-user-id="'.$user_id.'" data-username="'.url_title($username).'" href="'.url('user/'.$user_id.'/'.url_title($username)).'">'.$prefix.$username.'</a>';
+>>>>>>> upstream/dev
 	}
 
 	public function avatar()
@@ -117,4 +127,12 @@ class User extends Model2
 
 		return FALSE;
 	}
+<<<<<<< HEAD
+=======
+
+	public function url()
+	{
+		return $this->id.'/'.url_title($this->username);
+	}
+>>>>>>> upstream/dev
 }

@@ -2,7 +2,11 @@
 	<div class="carousel-inner" role="listbox">
 		<?php foreach ($images as $image): ?>
 		<div class="item<?php echo !isset($active) ? $active = ' active' : '' ?>">
+<<<<<<< HEAD
 			<a href="<?php echo url('gallery/image/'.$image['image_id'].'/'.url_title($image['title'])) ?>"><img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $image['file_id'])->path() ?>" data-toggle="tooltip" title="<?php echo $image['title'] ?>" alt="" /></a>
+=======
+			<a href="<?php echo url('gallery/image/'.$image['image_id'].'/'.url_title($image['title'])) ?>"><img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $image['file_id'])->path() ?>" data-toggle="tooltip" title="<?php echo $image['title'] ?>" alt="" /></a>
+>>>>>>> upstream/dev
 		</div>
 		<?php endforeach ?>
 	</div>

@@ -16,7 +16,11 @@
 <link rel="shortcut icon" href="<?php echo image('favicon.png') ?>" type="image/png">
 <?php echo $this->output->css() ?>
 <?php foreach ($this->config->langs as $lang): ?>
+<<<<<<< HEAD
 <link rel="alternate" href="<?php echo ($this->url->https ? 'https' : 'http').'://'.$this->url->host.$this->url->base.implode('/', array_merge([$lang->info()->name], $this->url->segments)).$this->url->query ?>" hreflang="<?php echo $lang->info()->name ?>">
+=======
+<link rel="alternate" href="<?php echo $this->url->base.implode('/', array_merge([$lang->info()->name], $this->url->segments)).$this->url->query ?>" hreflang="<?php echo $lang->info()->name ?>">
+>>>>>>> upstream/dev
 <?php endforeach ?>
 <title><?php echo $title ?></title>
 </head>

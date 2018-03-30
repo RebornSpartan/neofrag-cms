@@ -12,7 +12,11 @@ class Ajax extends Controller_Module
 {
 	public function _member($user)
 	{
+<<<<<<< HEAD
 		return $user->view('profile_mini');
+=======
+		return $user->view('user/profile');
+>>>>>>> upstream/dev
 	}
 
 	public function auth()
@@ -32,7 +36,11 @@ class Ajax extends Controller_Module
 						]))
 						->button($this	->button()
 										->title('Mot de passe oublié ?')
+<<<<<<< HEAD
 										->color('default')
+=======
+										->color('link')
+>>>>>>> upstream/dev
 										->modal_ajax('ajax/user/lost-password')
 						)
 						->button($this	->button()
@@ -105,7 +113,11 @@ class Ajax extends Controller_Module
 					)
 					->button_prepend($this	->button()
 											->title('Mot de passe oublié ?')
+<<<<<<< HEAD
 											->color('default')
+=======
+											->color('link')
+>>>>>>> upstream/dev
 											->modal_ajax('ajax/user/lost-password')
 					);
 	}

@@ -1,7 +1,11 @@
 <div class="row">
 	<?php if ($image_id): ?>
 	<div class="col-md-4">
+<<<<<<< HEAD
 		<a class="thumbnail" href="<?php echo url('recruits/'.$recruit_id.'/'.url_title($title)) ?>"><img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" /></a>
+=======
+		<a class="thumbnail" href="<?php echo url('recruits/'.$recruit_id.'/'.url_title($title)) ?>"><img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" /></a>
+>>>>>>> upstream/dev
 	</div>
 	<?php endif ?>
 	<div class="col-md-<?php echo $image_id ? '8' : '12' ?>">

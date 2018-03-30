@@ -21,7 +21,11 @@ class Index extends Controller_Module
 
 			if ($team['image_id'])
 			{
+<<<<<<< HEAD
 				$panel->body('<a href="'.url('teams/'.$team['team_id'].'/'.$team['name']).'"><img class="img-responsive" src="'.NeoFrag()->model2('file', $team['image_id'])->path().'" alt="" /></a>', FALSE);
+=======
+				$panel->body('<a href="'.url('teams/'.$team['team_id'].'/'.$team['name']).'"><img class="img-fluid" src="'.NeoFrag()->model2('file', $team['image_id'])->path().'" alt="" /></a>', FALSE);
+>>>>>>> upstream/dev
 			}
 
 			$panels->append($panel);

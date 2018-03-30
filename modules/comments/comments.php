@@ -36,7 +36,13 @@ class Comments extends Module
 
 		$new = $this->view('new', [
 			'form' => $this	->form2()
+<<<<<<< HEAD
 							->rule($this->form_textarea('comment')
+=======
+							->compact()
+							->rule($this->form_textarea('comment')
+										->rows(4)
+>>>>>>> upstream/dev
 										->required()
 							)
 							->success(function($data) use ($module, $module_id){
@@ -46,6 +52,10 @@ class Comments extends Module
 										->set('content',   $data['comment'])
 										->create();
 							})
+<<<<<<< HEAD
+=======
+							->submit('Envoyer')
+>>>>>>> upstream/dev
 		]);
 
 		/*		<?php echo icon('fa-ban').' '.$this->lang('Vous devez être identifié pour pouvoir poster un commentaire') ?>*/

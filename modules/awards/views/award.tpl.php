@@ -1,5 +1,9 @@
 <?php if ($image_id): ?>
+<<<<<<< HEAD
 	<img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" />
+=======
+	<img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" />
+>>>>>>> upstream/dev
 <?php endif ?>
 <div class="panel-body">
 	<div class="well text-center">

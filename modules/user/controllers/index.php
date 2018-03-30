@@ -12,6 +12,7 @@ class Index extends Controller_Module
 {
 	public function account($sessions)
 	{
+<<<<<<< HEAD
 		return $this->title('Connexion')
 					->icon('fa-sign-in')
 					->breadcrumb()
@@ -94,6 +95,113 @@ class Index extends Controller_Module
 
 	public function profile()
 	{
+=======
+		return $this->title('Mon activité')
+					->icon('fa-star-o')
+					->array([
+						$this->row($this->col($this->panel()->body($this->_panel_infos()))),
+						$this	->row()
+								->append($this->col($this	->panel()
+															->heading('Mon profil')
+															->body($this->user->view('user/profile'))
+															->size('col-md-5')
+								))
+								->append($this	->col()
+												->size('col-md-7')
+												->append($this	->panel()
+																->heading('Messagerie')
+																->body($this->view('index'))
+												)
+												->append($this->_panel_activities())
+								)
+					]);
+	}
+
+	public function account($sessions)
+	{
+		return $this->title('Connexion')
+					->icon('fa-sign-in')
+					->breadcrumb()
+					->array
+					->append($this	->row()
+									->append(
+										$this	->col()
+												->size('col-6')
+												->append(
+													$this	->form2('username current_password new_password email', $this->user)
+															->success(function($data){
+
+															})
+															->submit('Modifier')
+															->panel()
+															->title('Info de connexion')
+												)
+									)
+									->append(
+										$this	->col()
+												->size('col-6')
+												->append(
+													$this	->form2()
+															->rule($this->form_checkbox('delete')
+																		->data([
+																			'account'   => 'Je souhaite supprimer mon compte',
+																			//'keep_data' => 'J\'accepte que mes contributions soient conservées de façon anonyme'
+																		])
+															)
+															->form('current_password')
+															->success(function($data){
+																if (in_array('account', $data['delete']))
+																{
+																	//TODO
+																	if (1 || in_array('keep_data', $data['delete']))
+																	{
+																		$this->user->set('deleted', TRUE)->update();
+																	}
+																	else
+																	{
+																		$this->user->delete();
+																	}
+
+																	NeoFrag()->collection('session')->where('user_id', $this->user->id)->update([
+																		'user_id' => NULL
+																	]);
+
+																	notify('Compte supprimé');
+
+																	redirect();
+																}
+															})
+															->submit('Supprimer', 'danger')
+															->panel()
+															->title('Supprimer mon compte', 'fa-times')
+												)
+									)
+					)
+					->append($this	->table2($sessions)
+									->col(function($session){
+										return user_agent($session->data->session->user_agent);
+									})
+									->col('Adresse IP', function($session){
+										return geolocalisation($ip_address = $session->data->session->ip_address).'<span data-toggle="tooltip" data-original-title="'.$session->data->session->host_name.'">'.$ip_address.'</span>';
+									})
+									->col('Site référent', function($session){
+										return $session->data->session->referer ? urltolink($session->data->session->referer) : $this->lang('Aucun');
+									})
+									->col('Date', function($session){
+										return $session->data->session->date;
+									})
+									->col('Compte tiers', function($session){
+										return $session->auth ? $session->auth : '';
+									})
+									->delete()
+									->panel()
+									->title('Sessions actives', 'fa-globe')
+					);
+	}
+
+	public function profile()
+	{
+>>>>>>> upstream/dev
 		return $this->title('Profil')
 					->icon('fa-pencil')
 					->breadcrumb()
@@ -158,6 +266,7 @@ class Index extends Controller_Module
 				]
 			]
 		);
+<<<<<<< HEAD
 
 		$provider = $service->getProvider($name);
 
@@ -165,6 +274,15 @@ class Index extends Controller_Module
 		{
 			$data = $callback($provider->getIdentity($provider->getAccessTokenByRequestParameters($params)));
 
+=======
+
+		$provider = $service->getProvider($name);
+
+		if ($callback = $authenticator->data($params))
+		{
+			$data = $callback($provider->getIdentity($provider->getAccessTokenByRequestParameters($params)));
+
+>>>>>>> upstream/dev
 			if (($auth = $this->collection('auth')->where('authenticator', $authenticator->__addon->id)->where('key', $data['id'])->row()) && $auth->key == $data['id'])
 			{
 				if ($this->user->id != $auth->user->id)
@@ -221,20 +339,14 @@ class Index extends Controller_Module
 	{
 		$this->breadcrumb();
 
-		return $this->row(
-			$this->col(
-				$this->_panel_messages()
-			),
-			$this->col(
-				$this	->panel()
-						->heading()
-						->body(!$messages ? '<h4 class="text-center">Aucun message</h4>' : $this->view('messages/inbox', [
-							'messages'     => $messages,
-							'allow_delete' => $allow_delete
-						]), FALSE)
-						->size('col-md-8 col-lg-9'),
-				$this->panel_pagination()
-			)
+		return $this->col(
+			$this	->panel()
+					->heading()
+					->body(!$messages ? '<h4 class="text-center">Aucun message</h4>' : $this->view('messages/inbox', [
+						'messages'     => $messages,
+						'allow_delete' => $allow_delete
+					]), FALSE),
+			$this->module->pagination->panel()
 		);
 	}
 
@@ -278,6 +390,7 @@ class Index extends Controller_Module
 			redirect('user/messages/'.$message_id.'/'.url_title($title));
 		}
 
+<<<<<<< HEAD
 		return $this->row(
 			$this->col(
 				$this->_panel_messages()
@@ -293,6 +406,17 @@ class Index extends Controller_Module
 						->heading('Répondre', 'fa-reply')
 						->body($this->form()->display())
 			)
+=======
+		return $this->col(
+			$this	->panel()
+					->heading($title, 'fa-envelope-o')
+					->body($this->view('messages/replies', [
+						'replies' => $replies
+					])),
+			$this	->panel()
+					->heading('Répondre', 'fa-reply')
+					->body($this->form()->display())
+>>>>>>> upstream/dev
 		);
 	}
 
@@ -331,6 +455,7 @@ class Index extends Controller_Module
 			}
 		}
 
+<<<<<<< HEAD
 		return $this->row(
 			$this->col(
 				$this->_panel_messages()
@@ -342,6 +467,11 @@ class Index extends Controller_Module
 						->size('col-md-8 col-lg-9')
 			)
 		);
+=======
+		return $this->panel()
+					->heading()
+					->body($this->form()->display());
+>>>>>>> upstream/dev
 	}
 
 	public function _messages_delete($message_id, $title)
@@ -366,16 +496,51 @@ class Index extends Controller_Module
 		return $this->form()->display();
 	}
 
-	public function _member($user_id, $username)
+	public function _member($user)
 	{
-		$this->title($username);
+		$this->output->data->set('pre_module', $this->array
+													->append($user->view('user/cover'))
+													->append('	<div class="user-info">
+																	<div class="container">
+																		'.$this->row($this->col($this->_panel_infos($user))->size('col-8 offset-4')).'
+																	</div>
+																</div>')
+		);
 
+<<<<<<< HEAD
 		return $this->array
 					->append($this	->panel()
 									->heading($username, 'fa-user')
 									->body($this->view('profile_public', $this->model()->get_user_profile($user_id)))
 					)
 					->append($this->panel_back($this->module('members') ? 'members' : ''));
+=======
+		return $this->title($user->username)
+					->breadcrumb('Profil')
+					->breadcrumb($user->username)
+					->row()
+					->append($this	->col()
+									->size('col-4 user-col')
+									->append($this	->panel()
+													->body($user->view('user/profile'))
+									)
+									->append_if(in_array('donate-0', $this->groups($user->id)), function(){
+										return $this->panel()
+													->style('honor')
+													->body('<h4>'.icon('fa-usd text-success').' Donateur</h4>');
+									})
+									->append_if(in_array('shop2-0', $this->groups($user->id)), function(){
+										return $this->panel()
+													->style('honor')
+													->body('<h4>'.icon('fa-cubes text-warning').' Contributeur</h4>');
+									})
+					)
+					->append($this	->col()
+									->size('col-8')
+									->append($this->_panel_activities())
+									->append($this->panel_back())
+					);
+>>>>>>> upstream/dev
 	}
 
 	public function _panel_profile(&$user_profile = NULL)
@@ -388,8 +553,9 @@ class Index extends Controller_Module
 					->size('col-md-4 col-lg-3');
 	}
 
-	public function _panel_infos($user_id = NULL)
+	public function _panel_infos($user = NULL)
 	{
+<<<<<<< HEAD
 		if ($user_id === NULL)
 		{
 			$user_id = $this->user->id;
@@ -413,11 +579,19 @@ class Index extends Controller_Module
 		return $this->panel()
 					->body($this->view('infos', $infos))
 					->size('col-md-8 col-lg-9');
+=======
+		return $this->view('infos', [
+			'user' => $user ?: $this->user
+		]);
+>>>>>>> upstream/dev
 	}
 
 	public function _panel_activities($user_id = NULL)
 	{
-		$this->css('activities');
+		$this	->css('activities')
+				->js('user')
+				->css('jquery.mCustomScrollbar.min')
+				->js('jquery.mCustomScrollbar.min');
 
 		if ($user_id === NULL)
 		{
@@ -452,14 +626,5 @@ class Index extends Controller_Module
 					->body($this->view('activity', [
 						'user_activity' => $user_activity
 					]));
-	}
-
-	private function _panel_messages()
-	{
-		return $this->panel()
-					->heading('Messagerie privée', 'fa-envelope-o')
-					->body($this->view('messages/menu'), FALSE)
-					->footer('<a href="'.url('user').'">'.icon('fa-arrow-circle-o-left').' Retour sur mon espace</a>', 'left')
-					->size('col-md-4 col-lg-3');
 	}
 }

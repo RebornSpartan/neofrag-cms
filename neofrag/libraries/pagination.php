@@ -22,7 +22,11 @@ class Pagination extends Library
 	{
 		parent::__construct($caller);
 
+<<<<<<< HEAD
 		if (is_a($caller, 'NF\\NeoFrag\\Addons\\Module'))
+=======
+		if (is_a($caller, 'NF\\NeoFrag\\Addons\\Module'))//TODO
+>>>>>>> upstream/dev
 		{
 			$caller->pagination = $this;
 		}
@@ -140,11 +144,21 @@ class Pagination extends Library
 		return '';
 	}
 
+<<<<<<< HEAD
 	public function row()
 	{
 		if ($pagination = $this->get_pagination())
 		{
 			return parent::row($this->col($pagination));
+=======
+	public function panel()
+	{
+		if ($pagination = $this->get_pagination())
+		{
+			return parent	::panel()
+							->style('transparent text-right')
+							->body($pagination, FALSE);
+>>>>>>> upstream/dev
 		}
 	}
 
@@ -198,7 +212,7 @@ class Pagination extends Library
 
 	public function get_url()
 	{
-		return url(implode('/', ($pos = array_search('page', $this->url->segments)) !== FALSE || ($pos = array_search('all', $this->url->segments)) !== FALSE ? array_slice($this->url->segments, 0, $pos) : $this->url->segments));
+		return url(preg_replace('_/?(page/\d+|all)$_', '', $this->url->request));
 	}
 
 	public function get_items_per_page()

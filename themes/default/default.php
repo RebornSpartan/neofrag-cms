@@ -27,7 +27,16 @@ class Default_ extends Theme
 	{
 		$this	->css('font.open-sans.300.400.600.700.800')
 				->css('font.economica.400.700')
+<<<<<<< HEAD
 				->css('style');
+=======
+				->css('style')
+				->js('jquery-3.2.1.min')
+				->js('popper.min')
+				->js('bootstrap.min')
+				->js('bootstrap-notify.min')
+				->js('notify');
+>>>>>>> upstream/dev
 	}
 
 	public function styles_row()

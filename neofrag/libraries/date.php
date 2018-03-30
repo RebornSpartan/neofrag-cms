@@ -90,6 +90,19 @@ class Date extends Library
 		return $this->format('Y-m-d H:i:s');
 	}
 
+<<<<<<< HEAD
+=======
+	public function interval($date)
+	{
+		if (!is_a($date, 'NF\\NeoFrag\\Libraries\\Date'))
+		{
+			$date = $this->date($date);
+		}
+
+		return $this->_datetime->diff($date->_datetime);
+	}
+
+>>>>>>> upstream/dev
 	public function timestamp()
 	{
 		return $this->_datetime->getTimestamp();

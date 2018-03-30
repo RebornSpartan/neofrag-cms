@@ -10,6 +10,7 @@ use NF\NeoFrag\Loadables\Controllers\Module_Checker;
 
 class Checker extends Module_Checker
 {
+<<<<<<< HEAD
 	public function account($page = '')
 	{
 		$this->error->unconnected();
@@ -23,24 +24,36 @@ class Checker extends Module_Checker
 		{
 			$this->error->unconnected();
 		}
+=======
+	public function index()
+	{
+		$this->error->unconnected();
+>>>>>>> upstream/dev
 
 		return [];
 	}
 
-	public function sessions($page = '')
+	public function account($page = '')
 	{
+<<<<<<< HEAD
 		if ($this->user->id)
 		{
 			return [$this->module->pagination->get_data($this->user->get_sessions_history(), $page)];
 		}
 
 		$this->error->unconnected();
+=======
+		$this->error->unconnected();
+
+		return [NeoFrag()->collection('session')->where('_.user_id', $this->user->id)->order_by('_.last_activity DESC')->paginate($page)];
+>>>>>>> upstream/dev
 	}
 
-	public function _session_delete($session_id)
+	public function profile()
 	{
-		$this->ajax();
+		$this->error->unconnected();
 
+<<<<<<< HEAD
 		if (!$this->user->id)
 		{
 			$this->error->unconnected();
@@ -67,6 +80,53 @@ class Checker extends Module_Checker
 		{
 			return [$authenticator];
 		}
+	}
+
+	public function _auth($page = '')
+	{
+		$this->error->unconnected();
+
+		return [$this->collection('auth')->where('_.user_id', $this->user->id)->order_by('_.id')->paginate($page)];
+=======
+		return [];
+	}
+
+	public function sessions($page = '')
+	{
+		$this->error->unconnected();
+
+		return [NeoFrag()->collection('session_history')->where('_.user_id', $this->user->id)->order_by('_.date DESC')->paginate($page)];
+	}
+
+	public function _session_delete($session_id)
+	{
+		$this->error->unconnected();
+
+		if ($this->db->select('1')->from('nf_session')->where('user_id', $this->user->id)->where('id', $session_id)->row())
+		{
+			$this->ajax();
+
+			return [$session_id];
+		}
+	}
+
+	public function lost_password($token)
+	{
+		$this->error_if($this->user());
+
+		if ($token = $this->model2('token', $token))
+		{
+			return [$token];
+		}
+	}
+
+	public function auth($provider)
+	{
+		if (($authenticator = $this->authenticator(str_replace('-', '_', $provider))) && $authenticator->is_setup())
+		{
+			return [$authenticator];
+		}
+>>>>>>> upstream/dev
 	}
 
 	public function _auth($page = '')
@@ -149,19 +209,19 @@ class Checker extends Module_Checker
 
 	public function _messages_delete($message_id, $title)
 	{
-		$this->ajax();
-
 		if (($message = $this->model('messages')->get_message($message_id, $title)) && $title == url_title($message['title']))
 		{
+			$this->ajax();
+
 			return $message;
 		}
 	}
 
-	public function _member($user_id, $username)
+	public function _member($id, $username)
 	{
-		if ($user = $this->model()->check_user($user_id, $username))
+		if ($user = NeoFrag()->model2('user', $id)->check('username', $username))
 		{
-			return $user;
+			return [$user];
 		}
 	}
 }

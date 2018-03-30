@@ -6,6 +6,13 @@
 			border-top: 1px solid #ebebeb;
 		}
 
+<<<<<<< HEAD
+=======
+		&.comments-child {
+			margin-left: 115px;
+		}
+
+>>>>>>> upstream/dev
 		&:first-child {
 			padding-top: 0;
 		}
@@ -17,6 +24,7 @@
 		.media-body {
 			padding-left: 15px;
 
+<<<<<<< HEAD
 			.action {
 				float: right;
 				display: none;
@@ -27,12 +35,24 @@
 						margin-left: 10px;
 					}
 				}
+=======
+			h6 {
+				margin-bottom: 10px;
+			}
+
+			.list-right {
+				display: none;
+>>>>>>> upstream/dev
 			}
 		}
 
 		&:hover {
 			.media-body {
+<<<<<<< HEAD
 				.action {
+=======
+				.list-right {
+>>>>>>> upstream/dev
 					display: block;
 				}
 			}

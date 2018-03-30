@@ -1,5 +1,9 @@
 <?php if (!empty($category_image)): ?>
+<<<<<<< HEAD
 <img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $category_image)->path() ?>" alt="" />
+=======
+<img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $category_image)->path() ?>" alt="" />
+>>>>>>> upstream/dev
 <?php endif ?>
 <div class="panel-body">
 	<?php if (!empty($gallery)): ?>

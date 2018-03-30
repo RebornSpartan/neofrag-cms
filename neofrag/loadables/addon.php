@@ -90,7 +90,18 @@ abstract class Addon extends NeoFrag implements \NF\NeoFrag\Loadable
 
 	public function info()
 	{
+<<<<<<< HEAD
 		return (object)array_merge($this->__info(), $this->__info);
+=======
+		static $info = [];
+
+		if (!array_key_exists($id = spl_object_hash($this), $info))
+		{
+			$info[$id] = (object)array_merge($this->__info(), $this->__info);
+		}
+
+		return $info[$id];
+>>>>>>> upstream/dev
 	}
 
 	public function settings()

@@ -50,7 +50,11 @@ class Index extends Controller_Widget
 		{
 			return $this->panel()
 						->heading($image['title'])
+<<<<<<< HEAD
 						->body('<a href="'.$href.'"><img class="img-responsive" src="'.NeoFrag()->model2('file', $image['file_id'])->path().'" alt="" /></a>', FALSE)
+=======
+						->body('<a href="'.$href.'"><img class="img-fluid" src="'.NeoFrag()->model2('file', $image['file_id'])->path().'" alt="" /></a>', FALSE)
+>>>>>>> upstream/dev
 						->footer('<a href="'.$href.'">'.icon('fa-arrow-circle-o-right').' '.$this->lang('Détails').'</a>', 'right');
 		}
 		else

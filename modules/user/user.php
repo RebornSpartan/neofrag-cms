@@ -13,7 +13,11 @@ class User extends Module
 	protected function __info()
 	{
 		return [
+<<<<<<< HEAD
 			'title'       => 'Mon compte',
+=======
+			'title'       => 'Utilisateur',
+>>>>>>> upstream/dev
 			'description' => '',
 			'icon'        => 'fa-user',
 			'link'        => 'https://neofr.ag',

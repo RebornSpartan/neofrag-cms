@@ -90,7 +90,11 @@ class Index extends Controller_Module
 		}
 
 		$actions = $this	->panel()
+<<<<<<< HEAD
 							->body($content.'<div class="clearfix"></div>', FALSE)
+=======
+							->body($content, FALSE)
+>>>>>>> upstream/dev
 							->color('back');
 
 		$panels->prepend($actions)->append($actions);

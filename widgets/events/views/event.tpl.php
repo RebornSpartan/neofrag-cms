@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <a href="<?php echo $link = url('events/'.$event_id.'/'.url_title($title)) ?>"><img src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" class="img-responsive" alt="" /></a>
+=======
+<a href="<?php echo $link = url('events/'.$event_id.'/'.url_title($title)) ?>"><img src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" class="img-fluid" alt="" /></a>
+>>>>>>> upstream/dev
 <div class="panel-body">
 	<?php if (!empty($match['opponent']))://Matches ?>
 	<div class="text-center"<?php echo !$description ?: ' style="margin-bottom: 10px;"' ?>>
@@ -22,7 +26,11 @@
 			<?php endif ?>
 			<?php if ($match['opponent']['image_id']): ?>
 			<div class="text-right col-xs-1 vcenter">
+<<<<<<< HEAD
 				<img src="<?php echo NeoFrag()->model2('file', $match['opponent']['image_id'])->path() ?>" class="img-responsive" alt="" />
+=======
+				<img src="<?php echo NeoFrag()->model2('file', $match['opponent']['image_id'])->path() ?>" class="img-fluid" alt="" />
+>>>>>>> upstream/dev
 			</div>
 			<?php endif ?>
 			<div class="text-left col-xs-<?php echo $match['opponent']['image_id'] ? 4 : 5 ?> vcenter">

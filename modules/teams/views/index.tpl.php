@@ -1,5 +1,9 @@
 <?php if ($image_id): ?>
+<<<<<<< HEAD
 <a href="<?php echo url('teams/'.$team_id.'/'.$name) ?>"><img class="img-responsive" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" /></a>
+=======
+<a href="<?php echo url('teams/'.$team_id.'/'.$name) ?>"><img class="img-fluid" src="<?php echo NeoFrag()->model2('file', $image_id)->path() ?>" alt="" /></a>
+>>>>>>> upstream/dev
 <?php endif ?>
 <div class="panel-body">
 	<?php if ($description): ?>

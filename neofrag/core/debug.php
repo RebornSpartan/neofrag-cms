@@ -131,8 +131,10 @@ class Debug extends Core
 				return $a[1] > $b[1];
 			});
 
-			foreach ($this->_timeline as $time)
+			foreach ($this->_timeline as $object)
 			{
+				list($time) = $object->__debug->time;
+
 				if (!isset($min, $max))
 				{
 					$min = $time[1];
@@ -229,7 +231,11 @@ class Debug extends Core
 
 							$warning = $error = $notice = $deprecated = $strict = 0;
 
+<<<<<<< HEAD
 							/*foreach ($this->_logs as $i => list($prefix, $text, $type, $file, $line, $date))
+=======
+							foreach ($this->_logs as $i => list($prefix, $text, $type, $file, $line, $date))
+>>>>>>> upstream/dev
 							{
 								if ($type == self::INFO)
 								{
@@ -266,7 +272,11 @@ class Debug extends Core
 													<td class="col-md-8">'.utf8_htmlentities($text).'</td>
 													<td class="col-md-3 text-right">'.$file.' <code>'.$line.'</code></td>
 												</tr>';
+<<<<<<< HEAD
 							}*/
+=======
+							}
+>>>>>>> upstream/dev
 
 							$result .= '</table>';
 
@@ -297,7 +307,11 @@ class Debug extends Core
 							return '';
 						})
 						->bar('timeline', function(){
+<<<<<<< HEAD
 							return '';
+=======
+							return $this->timeline();
+>>>>>>> upstream/dev
 						})
 						->bar('server', function(){
 							return $_SERVER;

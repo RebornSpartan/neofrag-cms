@@ -5,7 +5,11 @@
 		<div class="row">
 			<?php if ($match['match']['opponent']['image_id']): ?>
 			<div class="text-center col-xs-1">
+<<<<<<< HEAD
 				<img src="<?php echo NeoFrag()->model2('file', $match['match']['opponent']['image_id'])->path() ?>" class="img-responsive" alt="" />
+=======
+				<img src="<?php echo NeoFrag()->model2('file', $match['match']['opponent']['image_id'])->path() ?>" class="img-fluid" alt="" />
+>>>>>>> upstream/dev
 			</div>
 			<?php endif ?>
 			<div class="col-md-<?php echo $match['match']['opponent']['image_id'] ? 7 : 8 ?>">
